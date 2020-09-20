@@ -1,0 +1,11 @@
+/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/bin/Debug/netcoreapp3.0/hilos
+/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/bin/Debug/netcoreapp3.0/hilos.deps.json
+/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/bin/Debug/netcoreapp3.0/hilos.runtimeconfig.json
+/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/bin/Debug/netcoreapp3.0/hilos.runtimeconfig.dev.json
+/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/bin/Debug/netcoreapp3.0/hilos.dll
+/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/bin/Debug/netcoreapp3.0/hilos.pdb
+/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/obj/Debug/netcoreapp3.0/hilos.csprojAssemblyReference.cache
+/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/obj/Debug/netcoreapp3.0/hilos.AssemblyInfoInputs.cache
+/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/obj/Debug/netcoreapp3.0/hilos.AssemblyInfo.cs
+/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/obj/Debug/netcoreapp3.0/hilos.dll
+/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/obj/Debug/netcoreapp3.0/hilos.pdb

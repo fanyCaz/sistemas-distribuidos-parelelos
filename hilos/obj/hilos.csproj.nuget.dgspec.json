@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\estef\\source\\repos\\hilos\\hilos\\hilos.csproj": {}
+    "/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/hilos.csproj": {}
   },
   "projects": {
-    "C:\\Users\\estef\\source\\repos\\hilos\\hilos\\hilos.csproj": {
+    "/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/hilos.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\estef\\source\\repos\\hilos\\hilos\\hilos.csproj",
+        "projectUniqueName": "/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/hilos.csproj",
         "projectName": "hilos",
-        "projectPath": "C:\\Users\\estef\\source\\repos\\hilos\\hilos\\hilos.csproj",
-        "packagesPath": "C:\\Users\\estef\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\estef\\source\\repos\\hilos\\hilos\\obj\\",
+        "projectPath": "/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/hilos.csproj",
+        "packagesPath": "/home/fanycaz/.nuget/packages/",
+        "outputPath": "/home/fanycaz/Proyectos/sistemas-distribuidos-parelelos/hilos/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\estef\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/fanycaz/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -47,12 +45,26 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.0.1, 3.0.1]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.linux-x64",
+              "version": "[3.0.3, 3.0.3]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[3.0.0, 3.0.0]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/3.1.108/RuntimeIdentifierGraph.json"
         }
       }
     }
