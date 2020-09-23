@@ -6,6 +6,7 @@ namespace hilos
 {
     class Program
     {
+        //ESTEFANIA CACERES PEREZ 1727744
         static long obtenerFactorial(int n){
             long factorial = 1;
             for(int i  = 2; i<= n; i++){
@@ -15,6 +16,7 @@ namespace hilos
         }
 
         static BigInteger partFactorial(BigInteger start, BigInteger end){
+            Object factLock = new object();
             BigInteger fact1 = 1;
             for(BigInteger i = start;i <= end; i++){
                 fact1 *= i;
@@ -24,9 +26,10 @@ namespace hilos
 
         static BigInteger obtenerNumero(){
             BigInteger n = 0;
-            Console.WriteLine("Menciona el numero para obtener su factorial");
+            Console.WriteLine("Menciona el numero para obtener su factorial, debe ser entero positivo");
             try{
                 n = BigInteger.Parse(Console.ReadLine());
+                if(n < 0) return obtenerNumero();
                 return n;
             }catch(Exception){
                 Console.WriteLine("Escribe un número, porfavor");
@@ -40,7 +43,7 @@ namespace hilos
             BigInteger segundNum = primerNum*2;
             BigInteger tercerNum = primerNum*3;
             BigInteger factorial = 1;
-            BigInteger f1=0,f2=0,f3=0,f4 = 0;
+            BigInteger f1=1,f2=1,f3=1,f4 = 1;
             Thread hiloA = new Thread(()=>{
                 f1 = partFactorial(1,primerNum);
                 Console.WriteLine("Termino HILO A");
@@ -67,7 +70,7 @@ namespace hilos
             hiloD.Join();
             
             factorial = f1*f2*f3*f4;
-            Console.WriteLine("valor value : {0}",factorial);
+            Console.WriteLine("Factorial de {0} : {1}",num,factorial);
         }
     }
 }
