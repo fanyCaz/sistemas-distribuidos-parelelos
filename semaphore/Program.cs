@@ -16,7 +16,7 @@ namespace semaphore
             cuenta.Str = 0;
             while(i < hilos){
                 Thread t = new Thread(()=>{
-                   sumados = cuenta.sumatoria(sumados);
+                   sumados += cuenta.sumatoria(sumados);
                 });
                 t.Start();
                 i++;
