@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Numerics;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace hilos
 {
     class Program
     {
         //ESTEFANIA CACERES PEREZ 1727744
+        static object stap = new object();
+        static BigInteger factorial = 1;
         static long obtenerFactorial(int n){
             long factorial = 1;
             for(int i  = 2; i<= n; i++){
@@ -15,13 +19,14 @@ namespace hilos
             return factorial;
         }
 
-        static BigInteger partFactorial(BigInteger start, BigInteger end){
-            Object factLock = new object();
-            BigInteger fact1 = 1;
-            for(BigInteger i = start;i <= end; i++){
-                fact1 *= i;
+        static void partFactorial(BigInteger start, BigInteger end){
+            lock(stap){
+                BigInteger fact1 = 1;
+                for(BigInteger i = start;i <= end; i++){
+                    fact1 *= i;
+                }
+                factorial *= fact1;
             }
-            return fact1;
         }
 
         static BigInteger obtenerNumero(){
@@ -36,41 +41,29 @@ namespace hilos
                 return obtenerNumero();
             }
         }
+
+        static int obtenerIteraciones(){
+            return 0;
+        }
         static void Main(string[] args)
         {
             BigInteger num = obtenerNumero();
             BigInteger primerNum = num/4;
             BigInteger segundNum = primerNum*2;
             BigInteger tercerNum = primerNum*3;
-            BigInteger factorial = 1;
-            BigInteger f1=1,f2=1,f3=1,f4 = 1;
-            Thread hiloA = new Thread(()=>{
-                f1 = partFactorial(1,primerNum);
-                Console.WriteLine("Termino HILO A");
-            });
-            Thread hiloB = new Thread(()=>{
-                f2 = partFactorial(primerNum+1,segundNum);
-                Console.WriteLine("Termino HILO B");
-            });
-            Thread hiloC = new Thread(()=>{
-                f3 = partFactorial(segundNum+1,tercerNum);
-                Console.WriteLine("Termino HILO C");
-            });
-            Thread hiloD = new Thread(()=>{
-                f4 = partFactorial(tercerNum+1,num);
-                Console.WriteLine("Termino HILO D");
-            });
-            hiloA.Start();
-            hiloB.Start();
-            hiloD.Start();
-            hiloC.Start();
-            hiloA.Join();
-            hiloB.Join();
-            hiloC.Join();
-            hiloD.Join();
+            BigInteger fact = 1;
             
-            factorial = f1*f2*f3*f4;
-            Console.WriteLine("Factorial de {0} : {1}",num,factorial);
+            Thread hiloA = new Thread();
+            
+            Stopwatch sc = Stopwatch.StartNew();
+            
+            long tiempoHilos = sc.ElapsedTicks/1000;
+
+            
+            
+            Console.WriteLine("{0} tiempo en ms",tiempoHilos);
+            Console.WriteLine("Factorial LOCAL {0} : {1}",num,string.Format("{0:#.###E+0}",fact));
+            Console.WriteLine("Factorial GLOBAL {0} : {1}",num,string.Format("{0:#.###E+0}",factorial));
         }
     }
 }
