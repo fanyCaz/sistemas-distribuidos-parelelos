@@ -8,6 +8,10 @@ namespace semaphore
         public static int sumados= 0;
         static void Main(string[] args)
         {
+            
+        }
+
+        static void Principal(){
             System.Console.WriteLine("¿Cuantos hilos quieres?");
             int hilos = int.Parse(Console.ReadLine());
             int i = 0;
