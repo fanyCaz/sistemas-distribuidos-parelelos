@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Numerics;
 using System.Diagnostics;
+//ESTEFANIA CACERES PEREZ 1727744
 
 namespace factorial
 {
@@ -55,10 +56,11 @@ namespace factorial
                 return obtenerIteraciones();
             }
         }
-        static void Inicializar()
+
+        public static Dictionary<double[],string> ObtenerFactoriales(BigInteger num, int iteraciones)
         {
-            BigInteger num = obtenerNumero();
-            int iteraciones = obtenerIteraciones();
+            Dictionary<double[], string> valores = new Dictionary<double[], string>();
+            
             BigInteger primerNum = 1;
             BigInteger segundNum = 1;
 
@@ -83,8 +85,18 @@ namespace factorial
                     temp1 = primerNum + temp2;
                     temp2 = (j == numHilos - 1) ? num : segundNum + temp2;
                 }
-                Console.WriteLine("Factorial de {0} con {1} hilos : {2}. Tiempo {3} ms", num, numHilos, string.Format("{0:#.####E+0}", y), tiempo);
+                string sentencia = string.Format("Factorial de {0} con {1} hilos : {2}. Tiempo {3} ms", num, numHilos, string.Format("{0:#.####E+0}", y), tiempo);
+                double milisegundos = tiempo.TotalMilliseconds;
+                valores.Add(new double[] { numHilos, milisegundos }, sentencia );
             }
+            return valores;
+        }
+
+        static void Inicializar()
+        {
+            BigInteger num = obtenerNumero();
+            int iteraciones = obtenerIteraciones();
+            ObtenerFactoriales(num,iteraciones);
             TimeSpan tiempoSec = new TimeSpan();
             Stopwatch swSec = Stopwatch.StartNew();
             BigInteger factorialSec = obtenerFactorial(num);
