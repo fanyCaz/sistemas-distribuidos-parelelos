@@ -8,7 +8,7 @@ namespace semaphore
         public static int sumados= 0;
         static void Main(string[] args)
         {
-            
+            Principal();
         }
 
         static void Principal(){
