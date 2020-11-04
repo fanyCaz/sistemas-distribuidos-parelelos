@@ -10,18 +10,21 @@ public class Client{
         Socket s = null;
         Console console = System.console();
         try {
-            s = new Socket("127.0.0.1",5432);
+            s = new Socket("25.5.218.12",5432);
             oos = new ObjectOutputStream(s.getOutputStream());
             ois = new ObjectInputStream(s.getInputStream());
-            System.out.println("Ingresa un número cualquiera");
+           // System.out.println("Ingresa un número cualquiera");
 
             //usuario ingresa valores
-            String valor1 = console.readLine();
-            System.out.println("Ingresa un segundo número cualquiera");
-            String valor2 = console.readLine();
+            String valor1 = "Valor desde clienteeeeeee"; //console.readLine();
+            //System.out.println("Ingresa un segundo número cualquiera");
+            //String valor2 = console.readLine();
+            OperatingSystem sys = OperatingSyste.getInstance();
 
-            oos.writeObject(valor1);
-            oos.writeObject(valor2);
+            String datitos = System.getProperties().toString();
+            System.out.println();
+            oos.writeObject(datitos);
+            //oos.writeObject(valor2);
 
             String ret = (String)ois.readObject();
             System.out.println( "Resultado de multiplicación : " + ret);
