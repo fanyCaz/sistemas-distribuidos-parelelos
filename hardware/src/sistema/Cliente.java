@@ -12,7 +12,8 @@ import org.slf4j.Logger;
 
 public class Cliente {
  public static void main(String args[]) throws Exception {
-    ObjectOutputStream oos = null;
+	 Index.index();
+	/*ObjectOutputStream oos = null;
     ObjectInputStream ois = null;
     Socket s = null;
     SystemInfo si = new SystemInfo();
@@ -32,6 +33,7 @@ public class Cliente {
 	            "Almacenamiento: " + HDDStr, 
 	            "Sistema operativo: " + SO
             };
+    
     try
     {
 	    // instancio el server con la IP y el PORT
@@ -53,6 +55,6 @@ public class Cliente {
 	    if( ois != null ) ois.close();
 	    if( oos != null ) oos.close();
 	    if( s != null ) s.close();
-    }
+    }*/
  }
 }
