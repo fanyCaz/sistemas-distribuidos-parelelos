@@ -4,6 +4,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import java.util.List;
+
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GlobalMemory;
@@ -11,6 +13,10 @@ import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.CentralProcessor.TickType;
 import oshi.util.FormatUtil;
+
+import oshi.software.os.FileSystem;
+import oshi.software.os.OSFileStore;
+import oshi.software.os.OperatingSystem;
 
 import org.slf4j.Logger;
 
@@ -25,8 +31,7 @@ public class Cliente {
     String cpuModel  = hal.getProcessor().getProcessorIdentifier().toString();
     Long cpuFreq = hal.getProcessor().getMaxFreq();
     String cpuFreqStr = cpuFreq.toString() + " Hz";
-    GlobalMemory ram_memory = hal.getMemory();
-    String memory = hal.getMemory().toString();
+
     Long HDD = hal.getDiskStores().get(0).getSize();
     String HDDStr = HDD.toString();
     String SO = System.getProperty("os.name");
@@ -38,25 +43,38 @@ public class Cliente {
     //System.out.println("load " + cpuLoad);
     //CentralProcessor processor = hal.getProcessor();
     //System.out.println("procesador \n" + processor.toString() + "\n termino-procesador"); 
+    
     //Memoria RAM
+    GlobalMemory ram_memory = hal.getMemory();
+    String memory = hal.getMemory().toString();
     String totalRam = FormatUtil.formatBytes( ram_memory.getTotal() );
     long prc =  (ram_memory.getAvailable()*100) / ram_memory.getTotal();
     String prcRamDisponible = String.valueOf(prc) + "%";
-    
-    System.out.println("meomrioj " + ram_memory.getTotal() + " disponible " + ram_memory.getAvailable()  );
     String usedMemory = FormatUtil.formatBytes( ram_memory.getTotal() - ram_memory.getAvailable() );
     //Datos como tipo de DDR, manufacturera, etc
     //var datosMemoria = hal.getMemory().getPhysicalMemory().toArray();
     
+    //Disco Duro
+    OperatingSystem sistOper = si.getOperatingSystem();
+    FileSystem sistArchivos = sistOper.getFileSystem();
+    List<OSFileStore> archivosLista = sistArchivos.getFileStores();
+    String discoLibre = "", discoTotal = "";
+    for(OSFileStore fs : archivosLista) {
+    	discoLibre = FormatUtil.formatBytes( fs.getFreeSpace() );
+    	discoTotal = FormatUtil.formatBytes( fs.getTotalSpace() );
+    }
     String[] systemInfo = {
 	            "Modelo CPU: " + cpuModel, 
 	            "Frecuencia CPU: " + cpuFreqStr,
 	            "Memoria RAM Total: " + totalRam,
 	            "Memoria RAM Disponible: " + memory,
 	            "Memoria RAM En Uso " + usedMemory,
+	            "Porcentaje RAM libre: " + prcRamDisponible,
 	            "Almacenamiento: " + HDDStr,
+	            "Almacenamiento Total: " + discoTotal,
+	            "Almacenamiento Libre: " + discoLibre,
 	            "Sistema operativo: " + SO,
-	            "Porcentaje libre: " + prcRamDisponible
+	            
             };
     
     try
