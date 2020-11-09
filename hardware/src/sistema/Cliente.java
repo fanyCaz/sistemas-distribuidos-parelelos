@@ -32,30 +32,31 @@ public class Cliente {
     String SO = System.getProperty("os.name");
 	        
     //Uso Procesador
-    long[] prevTicks = new long[TickType.values().length];
-    double cpuLoad = hal.getProcessor().getSystemCpuLoadBetweenTicks(prevTicks) * 100;
-    prevTicks = hal.getProcessor().getSystemCpuLoadTicks();
-    System.out.println("load " + cpuLoad);
-    CentralProcessor processor = hal.getProcessor();
-    System.out.println("procesador \n" + processor.toString() + "\n termino-procesador"); 
+    //long[] prevTicks = new long[TickType.values().length];
+    //double cpuLoad = hal.getProcessor().getSystemCpuLoadBetweenTicks(prevTicks) * 100;
+    //prevTicks = hal.getProcessor().getSystemCpuLoadTicks();
+    //System.out.println("load " + cpuLoad);
+    //CentralProcessor processor = hal.getProcessor();
+    //System.out.println("procesador \n" + processor.toString() + "\n termino-procesador"); 
     //Memoria RAM
     String totalRam = FormatUtil.formatBytes( ram_memory.getTotal() );
-    GlobalMemory gm = hal.getMemory();
-    long usedMemory = gm.getTotal() - gm.getAvailable();
-    var datosMemoria = hal.getMemory().getPhysicalMemory().toArray();
-    for(var dm : datosMemoria) {
-    	System.out.println(dm);
-    }
-    System.out.println("datos memoria finnnn");
-    //System.out.println("mreoroijraoi " + hal.getMemory().getPhysicalMemory().toArray()[0]);
+    long prc =  (ram_memory.getAvailable()*100) / ram_memory.getTotal();
+    String prcRamDisponible = String.valueOf(prc) + "%";
+    
+    System.out.println("meomrioj " + ram_memory.getTotal() + " disponible " + ram_memory.getAvailable()  );
+    String usedMemory = FormatUtil.formatBytes( ram_memory.getTotal() - ram_memory.getAvailable() );
+    //Datos como tipo de DDR, manufacturera, etc
+    //var datosMemoria = hal.getMemory().getPhysicalMemory().toArray();
+    
     String[] systemInfo = {
 	            "Modelo CPU: " + cpuModel, 
 	            "Frecuencia CPU: " + cpuFreqStr,
 	            "Memoria RAM Total: " + totalRam,
 	            "Memoria RAM Disponible: " + memory,
-	            "Memoria RAM En Uso " + FormatUtil.formatBytes(usedMemory),
+	            "Memoria RAM En Uso " + usedMemory,
 	            "Almacenamiento: " + HDDStr,
-	            "Sistema operativo: " + SO
+	            "Sistema operativo: " + SO,
+	            "Porcentaje libre: " + prcRamDisponible
             };
     
     try
