@@ -25,6 +25,7 @@ public class Cliente {
     String cpuModel  = hal.getProcessor().getProcessorIdentifier().toString();
     Long cpuFreq = hal.getProcessor().getMaxFreq();
     String cpuFreqStr = cpuFreq.toString() + " Hz";
+    GlobalMemory ram_memory = hal.getMemory();
     String memory = hal.getMemory().toString();
     Long HDD = hal.getDiskStores().get(0).getSize();
     String HDDStr = HDD.toString();
@@ -37,16 +38,22 @@ public class Cliente {
     System.out.println("load " + cpuLoad);
     CentralProcessor processor = hal.getProcessor();
     System.out.println("procesador \n" + processor.toString() + "\n termino-procesador"); 
-    //Memoria
-  //Memoria RAM
+    //Memoria RAM
+    String totalRam = FormatUtil.formatBytes( ram_memory.getTotal() );
     GlobalMemory gm = hal.getMemory();
     long usedMemory = gm.getTotal() - gm.getAvailable();
-   
+    var datosMemoria = hal.getMemory().getPhysicalMemory().toArray();
+    for(var dm : datosMemoria) {
+    	System.out.println(dm);
+    }
+    System.out.println("datos memoria finnnn");
+    //System.out.println("mreoroijraoi " + hal.getMemory().getPhysicalMemory().toArray()[0]);
     String[] systemInfo = {
 	            "Modelo CPU: " + cpuModel, 
 	            "Frecuencia CPU: " + cpuFreqStr,
-	            "Memoria: " + memory,
-	            "Memoria En Uso " + FormatUtil.formatBytes(usedMemory),
+	            "Memoria RAM Total: " + totalRam,
+	            "Memoria RAM Disponible: " + memory,
+	            "Memoria RAM En Uso " + FormatUtil.formatBytes(usedMemory),
 	            "Almacenamiento: " + HDDStr,
 	            "Sistema operativo: " + SO
             };
