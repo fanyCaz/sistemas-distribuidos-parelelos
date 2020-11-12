@@ -2,7 +2,11 @@ package sistema;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.management.ManagementFactory;
 import java.net.Socket;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import java.util.List;
 
@@ -16,9 +20,12 @@ import oshi.util.FormatUtil;
 
 import oshi.software.os.FileSystem;
 import oshi.software.os.OSFileStore;
+import oshi.software.os.OSProcess;
 import oshi.software.os.OperatingSystem;
 
 import org.slf4j.Logger;
+
+import com.sun.management.OperatingSystemMXBean;
 
 public class Cliente {
  public static void main(String args[]) throws Exception {
@@ -31,18 +38,31 @@ public class Cliente {
     String cpuModel  = hal.getProcessor().getProcessorIdentifier().toString();
     Long cpuFreq = hal.getProcessor().getMaxFreq();
     String cpuFreqStr = cpuFreq.toString() + " Hz";
-
+    
     Long HDD = hal.getDiskStores().get(0).getSize();
     String HDDStr = HDD.toString();
     String SO = System.getProperty("os.name");
 	        
     //Uso Procesador
-    //long[] prevTicks = new long[TickType.values().length];
-    //double cpuLoad = hal.getProcessor().getSystemCpuLoadBetweenTicks(prevTicks) * 100;
-    //prevTicks = hal.getProcessor().getSystemCpuLoadTicks();
-    //System.out.println("load " + cpuLoad);
-    //CentralProcessor processor = hal.getProcessor();
-    //System.out.println("procesador \n" + processor.toString() + "\n termino-procesador"); 
+    CentralProcessor processor = hal.getProcessor();
+    CentralProcessor.ProcessorIdentifier processorId = processor.getProcessorIdentifier();
+    System.out.println( processorId.getStepping() );
+    var procesadores = processor.getLogicalProcessors();
+    for(var pr : procesadores) {
+    	System.out.println("pr : " + pr.getProcessorNumber());
+    }
+    System.out.println( si.getOperatingSystem().getProcessCount() );	//Numero de procesos principales
+    OperatingSystemMXBean f = ManagementFactory.getPlatformMXBean( OperatingSystemMXBean.class ) ;
+    
+    System.out.println( f.getProcessCpuLoad() );
+    double prcUsoCPU = f.getSystemCpuLoad() * 100;
+    String prcCPU = String.valueOf(prcUsoCPU) + "%";
+    String prcLibreCPU = String.valueOf(100 - prcUsoCPU) + "%";
+    
+    //System.out.println( "nucleos : " + si.getHardware().getProcessor().getPhysicalProcessorCount() );
+    //System.out.println("sockets  : " + si.getHardware().getProcessor().getPhysicalPackageCount() );
+    //SACA EL NUMERO DE PROCESOS Y EL DE SUBPROCESOS, DIVIDELOS, Y TE DA EL PORCENTAJE DE USO
+    String frecuencyCPU =  String.valueOf(processorId.getVendorFreq() / 1000000000.0);
     
     //Memoria RAM
     GlobalMemory ram_memory = hal.getMemory();
@@ -59,13 +79,19 @@ public class Cliente {
     FileSystem sistArchivos = sistOper.getFileSystem();
     List<OSFileStore> archivosLista = sistArchivos.getFileStores();
     String discoLibre = "", discoTotal = "";
+    long numDiscoLibre, numDiscoTotal;
     for(OSFileStore fs : archivosLista) {
     	discoLibre = FormatUtil.formatBytes( fs.getFreeSpace() );
     	discoTotal = FormatUtil.formatBytes( fs.getTotalSpace() );
     }
+    
+    
     String[] systemInfo = {
 	            "Modelo CPU: " + cpuModel, 
 	            "Frecuencia CPU: " + cpuFreqStr,
+	            "Velocidad de Base CPU: " + frecuencyCPU,
+	            "Porcentaje uso CPU: " + prcCPU,
+	            "Porcentaje libre CPU: " + prcLibreCPU,
 	            "Memoria RAM Total: " + totalRam,
 	            "Memoria RAM Disponible: " + memory,
 	            "Memoria RAM En Uso " + usedMemory,
@@ -74,7 +100,6 @@ public class Cliente {
 	            "Almacenamiento Total: " + discoTotal,
 	            "Almacenamiento Libre: " + discoLibre,
 	            "Sistema operativo: " + SO,
-	            
             };
     
     try
