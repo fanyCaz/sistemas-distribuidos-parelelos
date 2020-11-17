@@ -91,10 +91,12 @@ public class Cliente {
     }
     
     InfoCliente info = new InfoCliente();
+    //CPU
     info.setCpuMode(cpuModel);
     info.setCpuFrecuencia(cpuFreq);
     info.setCpuVelocidad(cpuVel);
-    //info.setRamUso();
+    info.setCpuPrcUso(prcUsoCPU);
+    info.setCputPrcLibre( 100 - prcUsoCPU );
     //RAM
     info.setRamTotal(ram_memory.getTotal());
     info.setRamDisponible( ram_memory.getTotal() - ramUsada );
@@ -114,7 +116,7 @@ public class Cliente {
 	            prcLibreCPU,		//Porcentaje libre CPU
 	            totalRam,			//Memoria RAM Total
 	            memory,				//Memoria RAM Disponible
-	            "uso " + usedMemory,			//Memoria RAM En Uso
+	            usedMemory,			//Memoria RAM En Uso
 	            prcRamDisponible,	//Porcentaje RAM libre
 	            HDDStr,				//Almacenamiento
 	            discoTotal,			//Almacenamiento Total

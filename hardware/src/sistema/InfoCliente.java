@@ -18,8 +18,8 @@ public class InfoCliente {
     public String cpuModel;
     public long cpuFrecuencia;
     public double cpuVelocidad;
-    public int cpuPrcUso;
-    public int cpuPrcLibre;
+    public double cpuPrcUso;
+    public double cpuPrcLibre;
     public long ramTotal;
     public long ramDisponible;
     public long ramUso;
@@ -37,10 +37,10 @@ public class InfoCliente {
 	public void setCpuVelocidad(double cpuvelocidad) {
 		this.cpuVelocidad = cpuvelocidad;
 	}
-	public void setCpuPrcUso(int cpuprcuso) {
+	public void setCpuPrcUso(double cpuprcuso) {
 		this.cpuPrcUso = cpuprcuso;
 	}
-	public void setCputPrcLibre(int cpuprclibre) {
+	public void setCputPrcLibre(double cpuprclibre) {
 		this.cpuPrcLibre = cpuprclibre;
 	}
 	public void setRamTotal(long ramtotal) {
