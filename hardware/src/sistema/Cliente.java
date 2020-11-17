@@ -37,6 +37,7 @@ public class Cliente {
     HardwareAbstractionLayer hal = si.getHardware();
     String cpuModel  = hal.getProcessor().getProcessorIdentifier().toString();
     Long cpuFreq = hal.getProcessor().getMaxFreq();
+    
     String cpuFreqStr = cpuFreq.toString() + " Hz";
     
     Long HDD = hal.getDiskStores().get(0).getSize();
@@ -62,6 +63,7 @@ public class Cliente {
     //System.out.println( "nucleos : " + si.getHardware().getProcessor().getPhysicalProcessorCount() );
     //System.out.println("sockets  : " + si.getHardware().getProcessor().getPhysicalPackageCount() );
     //SACA EL NUMERO DE PROCESOS Y EL DE SUBPROCESOS, DIVIDELOS, Y TE DA EL PORCENTAJE DE USO
+    double cpuVel = processorId.getVendorFreq() / 1000000000.0;
     String frecuencyCPU =  String.valueOf(processorId.getVendorFreq() / 1000000000.0);
     
     //Memoria RAM
@@ -70,7 +72,8 @@ public class Cliente {
     String totalRam = FormatUtil.formatBytes( ram_memory.getTotal() );
     long prc =  (ram_memory.getAvailable()*100) / ram_memory.getTotal();
     String prcRamDisponible = String.valueOf(prc) + "%";
-    String usedMemory = FormatUtil.formatBytes( ram_memory.getTotal() - ram_memory.getAvailable() );
+    long ramUsada = ram_memory.getTotal() - ram_memory.getAvailable();
+    String usedMemory = FormatUtil.formatBytes( ramUsada );
     //Datos como tipo de DDR, manufacturera, etc
     //var datosMemoria = hal.getMemory().getPhysicalMemory().toArray();
     
@@ -79,33 +82,51 @@ public class Cliente {
     FileSystem sistArchivos = sistOper.getFileSystem();
     List<OSFileStore> archivosLista = sistArchivos.getFileStores();
     String discoLibre = "", discoTotal = "";
-    long numDiscoLibre, numDiscoTotal;
+    long numDiscoLibre = 0, numDiscoTotal = 0;
     for(OSFileStore fs : archivosLista) {
+    	numDiscoLibre = fs.getFreeSpace();
+    	numDiscoTotal = fs.getTotalSpace();
     	discoLibre = FormatUtil.formatBytes( fs.getFreeSpace() );
     	discoTotal = FormatUtil.formatBytes( fs.getTotalSpace() );
     }
     
+    InfoCliente info = new InfoCliente();
+    info.setCpuMode(cpuModel);
+    info.setCpuFrecuencia(cpuFreq);
+    info.setCpuVelocidad(cpuVel);
+    //info.setRamUso();
+    //RAM
+    info.setRamTotal(ram_memory.getTotal());
+    info.setRamDisponible( ram_memory.getTotal() - ramUsada );
+    info.setRamUso( ramUsada );
+    //Almacenamiento
+    info.setDdString( HDDStr );
+    info.setDdTotal(numDiscoTotal);
+    info.setDdLibre(numDiscoLibre);
+    //SO
+    info.setSO(SO);
     
     String[] systemInfo = {
-	            "Modelo CPU: " + cpuModel, 
-	            "Frecuencia CPU: " + cpuFreqStr,
-	            "Velocidad de Base CPU: " + frecuencyCPU,
-	            "Porcentaje uso CPU: " + prcCPU,
-	            "Porcentaje libre CPU: " + prcLibreCPU,
-	            "Memoria RAM Total: " + totalRam,
-	            "Memoria RAM Disponible: " + memory,
-	            "Memoria RAM En Uso " + usedMemory,
-	            "Porcentaje RAM libre: " + prcRamDisponible,
-	            "Almacenamiento: " + HDDStr,
-	            "Almacenamiento Total: " + discoTotal,
-	            "Almacenamiento Libre: " + discoLibre,
-	            "Sistema operativo: " + SO,
+	            cpuModel,			//Modelo CPU 
+	            cpuFreqStr,			//Frecuencia CPU
+	            frecuencyCPU,		//Velocidad de Base CPU
+	            prcCPU,				//Porcentaje uso CPU
+	            prcLibreCPU,		//Porcentaje libre CPU
+	            totalRam,			//Memoria RAM Total
+	            memory,				//Memoria RAM Disponible
+	            "uso " + usedMemory,			//Memoria RAM En Uso
+	            prcRamDisponible,	//Porcentaje RAM libre
+	            HDDStr,				//Almacenamiento
+	            discoTotal,			//Almacenamiento Total
+	            discoLibre,			//Almacenamiento Libre
+	            SO,					//Sistema operativo
             };
+    
     
     try
     {
-    	for(String info: systemInfo) {
-    		System.out.println(info);
+    	for(String infos: systemInfo) {
+    		System.out.println(infos);
     	}
     	/*
 	    // instancio el server con la IP y el PORT
