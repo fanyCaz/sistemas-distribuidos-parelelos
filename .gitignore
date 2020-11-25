@@ -364,3 +364,5 @@ FodyWeavers.xsd
 
 # Ejecutable
 *.exe
+/hardware/nbproject/private/
+/sistemadist/clienteservidor/target/

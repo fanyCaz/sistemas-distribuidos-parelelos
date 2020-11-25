@@ -143,7 +143,8 @@ public class Cliente {
     	}
     	
 	    // instancio el server con la IP y el PORT
-	    s = new Socket("25.5.218.12",5432);
+    	//edson 25.5.218.12
+	    s = new Socket("25.3.236.220",5432);
 	    oos = new ObjectOutputStream(s.getOutputStream());
 	    ois = new ObjectInputStream(s.getInputStream());
 	

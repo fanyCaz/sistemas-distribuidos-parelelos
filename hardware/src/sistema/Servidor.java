@@ -14,7 +14,7 @@ import java.io.ObjectOutputStream;
 
 
 public class Servidor {
-    public static void main(String[] args) throws Exception {
+   public static void main(String[] args) throws Exception {
         ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
         Socket s = null;
