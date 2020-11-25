@@ -35,6 +35,19 @@ public class Cliente {
 	    Socket s = null;
 	    SystemInfo si = new SystemInfo();
 	    HardwareAbstractionLayer hal = si.getHardware();
+	    
+	    //Informacion de red
+	    var net = hal.getNetworkIFs().get(0);
+	    long download1 = net.getBytesRecv();
+	    long timestamp1 = net.getTimeStamp();
+	    Thread.sleep(2000); //Sleep for a bit longer, 2s should cover almost every possible problem
+	    net.updateAttributes(); //Updating network stats
+	    long download2 = net.getBytesRecv();
+	    long timestamp2 = net.getTimeStamp();
+	    double bandwidth = (download2 - download1)/(timestamp2 - timestamp1) * 10;
+	    System.out.println(bandwidth);
+
+	    //Do the correct calculations
 	    String cpuModel  = hal.getProcessor().getProcessorIdentifier().toString();
 	    Long cpuFreq = hal.getProcessor().getMaxFreq();
 	    
@@ -49,10 +62,10 @@ public class Cliente {
 	    CentralProcessor.ProcessorIdentifier processorId = processor.getProcessorIdentifier();
 	    //System.out.println( processorId.getStepping() );
 	    var procesadores = processor.getLogicalProcessors();
-	    for(var pr : procesadores) {
-	    	System.out.println("pr : " + pr.getProcessorNumber());
-	    }
-	    System.out.println( si.getOperatingSystem().getProcessCount() );	//Numero de procesos principales
+//	    for(var pr : procesadores) {
+//	    	System.out.println("pr : " + pr.getProcessorNumber());
+//	    }
+//	    System.out.println( si.getOperatingSystem().getProcessCount());	//Numero de procesos principales
 	    OperatingSystemMXBean f = ManagementFactory.getPlatformMXBean( OperatingSystemMXBean.class ) ;
 	    
 	    //System.out.println( f.getProcessCpuLoad() );
@@ -133,7 +146,8 @@ public class Cliente {
 	    			 HDDStr.toString(),
 	    			 String.valueOf( numDiscoTotal ),
 	    			 String.valueOf( numDiscoLibre ),
-	    			 SO
+	    			 SO,
+	    			 String.valueOf(bandwidth)
 	   			};
 	   
 	    try

@@ -13,11 +13,14 @@ import java.net.Socket;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-
 public class Servidor {
+	// Inicializar hash map
+	static HashMap<String, Object> ranking = new HashMap<String, Object>(); 
+	
     public static void main(String[] args) throws Exception {
-    	// Initialize hash map
-    	
+    	ranking.put("25.3.236.220", 0);
+    	ranking.put("25.5.249.224", 0);
+    	ranking.put("25.5.218.12", 0);
     	
         ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
@@ -33,9 +36,12 @@ public class Servidor {
                 ois = new ObjectInputStream(s.getInputStream());
                 oos = new ObjectOutputStream(s.getOutputStream());
                 String[] clientSysInfo = (String[])ois.readObject();
+                
+                //Nuevo arreglo de string con infomración del sistema + direccion y nombre del host
+                
                 String[] newClientSysInfo = {
                 		"Nombre del host: " + s.getInetAddress().getHostName(),
-                		"Direccion IP: " + s.getInetAddress(),
+                		"Direccion IP: " + s.getInetAddress().getHostAddress(),
                 		"Modelo de CPU: " + clientSysInfo[0], // Modelo CPU
                 		"Frecuencia de CPU: " + clientSysInfo[1], // Frecuencia de CPU
                 		"Velocidad base de CPU: " + clientSysInfo[2], // Velocidad de Base CPU
@@ -47,9 +53,24 @@ public class Servidor {
                 		"Almacenamiento: " + clientSysInfo[8], // Almacenamiento 
                 		"Almacenamiento total: " + clientSysInfo[9], // Almacenamiento total
                 		"Almacenamiento libre: " + clientSysInfo[10], // Almacenamiento libre 
-                		"Sistemas Operativos: " + clientSysInfo[11], // SO
-                				
+                		"Sistemas Operativos: " + clientSysInfo[11], 
+                		"Ancho de banda: " + clientSysInfo[12]// SO
                 		};
+                
+                // Suma de ranking
+                double prcAlmacenamiento = Double.parseDouble(clientSysInfo[9]) / Double.parseDouble(clientSysInfo[10]);
+                double prcRAM = Double.parseDouble(clientSysInfo[5]) / Double.parseDouble(clientSysInfo[6]);
+                double prcLibreCPU = Double.parseDouble(clientSysInfo[4]);
+                double anchBand = Double.parseDouble(clientSysInfo[12]);
+                
+                double sumaNuevoRanking = prcAlmacenamiento + prcRAM + prcLibreCPU + anchBand;
+                
+                //Actualizar ranking en hash
+                String direccionCliente = s.getInetAddress().getHostAddress();
+                ranking.replace(direccionCliente, sumaNuevoRanking);
+                System.out.println("Ranking de " + direccionCliente + " : " + ranking.get(direccionCliente));
+                
+                
                 oos.writeObject("Respuesta recibida!");
                 System.out.println("Numero: " + counter);
                 for(String info: newClientSysInfo) {
