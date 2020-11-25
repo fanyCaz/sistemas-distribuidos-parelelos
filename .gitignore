@@ -366,3 +366,6 @@ FodyWeavers.xsd
 *.exe
 /ProyectoSDYP/hardware/nbproject/private/
 /proyectoSDYP/target/
+
+/hardware/nbproject/private/
+/sistemadist/clienteservidor/target/
