@@ -7,7 +7,7 @@ import java.net.Socket;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import oshi.SystemInfo;
@@ -47,7 +47,7 @@ public class Cliente {
     //Uso Procesador
     CentralProcessor processor = hal.getProcessor();
     CentralProcessor.ProcessorIdentifier processorId = processor.getProcessorIdentifier();
-    System.out.println( processorId.getStepping() );
+    //System.out.println( processorId.getStepping() );
     var procesadores = processor.getLogicalProcessors();
     for(var pr : procesadores) {
     	System.out.println("pr : " + pr.getProcessorNumber());
@@ -55,8 +55,8 @@ public class Cliente {
     System.out.println( si.getOperatingSystem().getProcessCount() );	//Numero de procesos principales
     OperatingSystemMXBean f = ManagementFactory.getPlatformMXBean( OperatingSystemMXBean.class ) ;
     
-    System.out.println( f.getProcessCpuLoad() );
-    double prcUsoCPU = f.getSystemCpuLoad() * 100;
+    //System.out.println( f.getProcessCpuLoad() );
+    double prcUsoCPU = f.getProcessCpuLoad() * 100;
     String prcCPU = String.valueOf(prcUsoCPU) + "%";
     String prcLibreCPU = String.valueOf(100 - prcUsoCPU) + "%";
     
@@ -108,12 +108,12 @@ public class Cliente {
     //SO
     info.setSO(SO);
     
-    String[] systemInfo = {
-	            cpuModel,			//Modelo CPU 
+   String[] systemInfo = {
+	            /*cpuModel,			//Modelo CPU
 	            cpuFreqStr,			//Frecuencia CPU
 	            frecuencyCPU,		//Velocidad de Base CPU
 	            prcCPU,				//Porcentaje uso CPU
-	            prcLibreCPU,		//Porcentaje libre CPU
+	            "porcentaje libre : " + prcLibreCPU,		//Porcentaje libre CPU
 	            totalRam,			//Memoria RAM Total
 	            memory,				//Memoria RAM Disponible
 	            usedMemory,			//Memoria RAM En Uso
@@ -121,16 +121,27 @@ public class Cliente {
 	            HDDStr,				//Almacenamiento
 	            discoTotal,			//Almacenamiento Total
 	            discoLibre,			//Almacenamiento Libre
-	            SO,					//Sistema operativo
-            };
-    
-    
+	            SO,					//Sistema operativo*/
+    			cpuModel,
+    			cpuFreq.toString(),
+    			 String.valueOf(cpuVel),
+    			 String.valueOf(prcUsoCPU),
+    			 String.valueOf(100 - prcUsoCPU),
+    			 String.valueOf( ram_memory.getTotal() ),
+    			 String.valueOf(  ram_memory.getTotal() - ramUsada ),
+    			 String.valueOf(ramUsada),
+    			 HDDStr.toString(),
+    			 String.valueOf( numDiscoTotal ),
+    			 String.valueOf( numDiscoLibre ),
+    			 SO
+   			};
+   
     try
     {
-    	for(String infos: systemInfo) {
+    	for(var infos: systemInfo) {
     		System.out.println(infos);
     	}
-    	/*
+    	
 	    // instancio el server con la IP y el PORT
 	    s = new Socket("25.5.218.12",5432);
 	    oos = new ObjectOutputStream(s.getOutputStream());
@@ -139,7 +150,7 @@ public class Cliente {
 	    oos.writeObject(systemInfo);
 	    String ret = (String)ois.readObject();
         System.out.println( "Valor de servidor: " + ret);
-        */
+        
     }
     catch(Exception ex)
     {
