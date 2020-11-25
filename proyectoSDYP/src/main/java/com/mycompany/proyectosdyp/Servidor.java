@@ -1,30 +1,26 @@
-package sistema;
-
-import java.net.ServerSocket;
-import java.util.HashMap;
-import oshi.SystemInfo;
-import oshi.hardware.CentralProcessor;
-import oshi.hardware.HardwareAbstractionLayer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import java.net.Socket;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.mycompany.proyectosdyp;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-
+/**
+ *
+ * @author raulc
+ */
 public class Servidor {
     public static void main(String[] args) throws Exception {
-    	// Initialize hash map
-    	
-    	
         ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
         Socket s = null;
         ServerSocket ss = new ServerSocket(5432);
         int counter = 1;
-        System.out.println("Servidor conectado");
         while (true) {
             try {
                 // el ServerSocket me da el Socket
@@ -36,19 +32,11 @@ public class Servidor {
                 String[] newClientSysInfo = {
                 		"Nombre del host: " + s.getInetAddress().getHostName(),
                 		"Direccion IP: " + s.getInetAddress(),
-                		"Modelo de CPU: " + clientSysInfo[0], // Modelo CPU
-                		"Frecuencia de CPU: " + clientSysInfo[1], // Frecuencia de CPU
-                		"Velocidad base de CPU: " + clientSysInfo[2], // Velocidad de Base CPU
-                		"Porcentaje de uso de CPU: " + clientSysInfo[3], // Porcentaje de uso de CPU
-                		"Porcentaje libre de CPU: " + clientSysInfo[4], // Porcentaje libre de CPU
-                		"Memoria RAM total: " + clientSysInfo[5], // Memoria RAM Total
-                		"Memoria RAM disponible: " + clientSysInfo[6], // Memoria Ram Disponible
-                		"Memoria RAM en uso: " + clientSysInfo[7], // Memoria ram en uso
-                		"Almacenamiento: " + clientSysInfo[8], // Almacenamiento 
-                		"Almacenamiento total: " + clientSysInfo[9], // Almacenamiento total
-                		"Almacenamiento libre: " + clientSysInfo[10], // Almacenamiento libre 
-                		"Sistemas Operativos: " + clientSysInfo[11], // SO
-                				
+                		clientSysInfo[0],
+                		clientSysInfo[1],
+                		clientSysInfo[2],
+                		clientSysInfo[3],
+                		clientSysInfo[4]
                 		};
                 oos.writeObject("Respuesta recibida!");
                 System.out.println("Numero: " + counter);
