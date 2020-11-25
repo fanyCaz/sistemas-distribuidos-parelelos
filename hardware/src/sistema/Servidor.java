@@ -58,10 +58,15 @@ public class Servidor {
                 		};
                 
                 // Suma de ranking
-                double prcAlmacenamiento = Double.parseDouble(clientSysInfo[9]) / Double.parseDouble(clientSysInfo[10]);
-                double prcRAM = Double.parseDouble(clientSysInfo[5]) / Double.parseDouble(clientSysInfo[6]);
-                double prcLibreCPU = Double.parseDouble(clientSysInfo[4]);
-                double anchBand = Double.parseDouble(clientSysInfo[12]);
+                double prcAlmacenamiento = Double.parseDouble(clientSysInfo[9]) / Double.parseDouble(clientSysInfo[10]) * 0.2;
+                double prcRAM = ((Double.parseDouble(clientSysInfo[6])/ 1000000000) * 100) / (Double.parseDouble(clientSysInfo[5]) / 1000000000);
+                double prcLibreCPU = Double.parseDouble(clientSysInfo[4]) * 0.8;
+                double anchBand = Double.parseDouble(clientSysInfo[12]) * 0.3;
+                
+                System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
+                System.out.println("Porcentaje de RAM: " + prcRAM);
+                System.out.println("Porcentaje CPU: " + prcLibreCPU);
+                System.out.println("AB: " + anchBand);
                 
                 double sumaNuevoRanking = prcAlmacenamiento + prcRAM + prcLibreCPU + anchBand;
                 
@@ -73,9 +78,9 @@ public class Servidor {
                 
                 oos.writeObject("Respuesta recibida!");
                 System.out.println("Numero: " + counter);
-                for(String info: newClientSysInfo) {
-                	System.out.println(info);                	
-                } 
+//                for(String info: newClientSysInfo) {
+//                	System.out.println(info);                	
+//                } 
                 
             } catch (Exception ex) {
                 ex.printStackTrace();

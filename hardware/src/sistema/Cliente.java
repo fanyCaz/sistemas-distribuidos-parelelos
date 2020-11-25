@@ -45,7 +45,7 @@ public class Cliente {
 	    long download2 = net.getBytesRecv();
 	    long timestamp2 = net.getTimeStamp();
 	    double bandwidth = (download2 - download1)/(timestamp2 - timestamp1) * 10;
-	    System.out.println(bandwidth);
+//	    System.out.println(bandwidth);
 
 	    //Do the correct calculations
 	    String cpuModel  = hal.getProcessor().getProcessorIdentifier().toString();
