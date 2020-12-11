@@ -27,22 +27,27 @@ import java.lang.management.ManagementFactory;
 
 public class Servidor {
 	// Inicializar hash map
-	static HashMap<String, Object> ranking = new HashMap<String, Object>(); 
+	static HashMap<String, Double> ranking = new HashMap<String, Double>(); 
 	static HashMap<String, Object> specs = new HashMap<String, Object>();
+	static String rankMayor;
+	static boolean isServer;
 	
     public static void main(String[] args) {
     	// Inicializando el hash de ranking para las ips
-    	ranking.put("25.3.236.220", 0);
-    	ranking.put("25.5.249.224", 0);
-    	ranking.put("25.5.218.12", 0);
+    	ranking.put("25.3.236.220", 0.0);
+    	ranking.put("25.5.249.224", 0.0);
+    	ranking.put("25.5.218.12", 0.0);
     	
     	// Inicializando el hash de espcificaciones del sistema para las ips
     	specs.put("25.3.236.220", new String[] {});
     	specs.put("25.5.249.224", new String[] {});
     	specs.put("25.5.218.12", new String[] {});
     	
+    	// Inicializar servidor mayor
+    	rankMayor = "25.5.218.12";
+    	
     	//
-    	boolean isServer = true;
+    	isServer = true;
     	
     	//
     	while(true) {
@@ -105,15 +110,15 @@ public class Servidor {
                 		};
                 
                 // Suma de ranking
-                double prcAlmacenamiento = Double.parseDouble(clientSysInfo[9]) / Double.parseDouble(clientSysInfo[10]) * 0.2;
+                double prcAlmacenamiento = Double.parseDouble(clientSysInfo[9]) / Double.parseDouble(clientSysInfo[10]) * 0.05;
                 double prcRAM = ((Double.parseDouble(clientSysInfo[6])/ 1000000000) * 100) / (Double.parseDouble(clientSysInfo[5]) / 1000000000);
                 double prcLibreCPU = Double.parseDouble(clientSysInfo[4]) * 0.8;
                 double anchBand = Double.parseDouble(clientSysInfo[12]) * 0.3;
                 
-//                System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
-//                System.out.println("Porcentaje de RAM: " + prcRAM);
-//                System.out.println("Porcentaje CPU: " + prcLibreCPU);
-//                System.out.println("AB: " + anchBand);
+                System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
+                System.out.println("Porcentaje de RAM: " + prcRAM);
+                System.out.println("Porcentaje CPU: " + prcLibreCPU);
+                System.out.println("AB: " + anchBand);
                 
                 double sumaNuevoRanking = prcAlmacenamiento + prcRAM + prcLibreCPU + anchBand;
                 
@@ -124,19 +129,40 @@ public class Servidor {
                 ranking.replace(direccionCliente, sumaNuevoRanking);
                 System.out.println("Ranking de " + direccionCliente + " : " + ranking.get(direccionCliente));
                 
-                // Actualizar specs del cliente
-                specs.replace(direccionCliente, newClientSysInfo);
-                
-                // Obtener specs del cliente
-                for(Map.Entry<String,Object> element: specs.entrySet()) {
-                	System.out.println(element.getKey());
-                	for(String spec: (String[]) element.getValue()) {
-                		System.out.println(spec);
+                // 
+                double tempMayor = Double.MIN_VALUE;
+                String ipRankMayor= "";
+                for(Map.Entry<String,Double> element: ranking.entrySet()) {
+//                	System.out.println(element.getValue());
+                	double actualClientRank = element.getValue();
+                	if(actualClientRank > tempMayor) {
+                		ipRankMayor = element.getKey();
+                		tempMayor = actualClientRank;
                 	}
                 }
                 
-                // Devolver respuesta
-                oos.writeObject(ranking);
+                if(!ipRankMayor.equals(rankMayor)) {
+                    // Devolver respuesta
+                    oos.writeObject(true);
+                    return false;
+                } else {
+                	oos.writeObject(false);
+                }
+                
+                System.out.println("El mayor es la ip: " + rankMayor);
+                
+                
+                // Actualizar specs del cliente
+                specs.replace(direccionCliente, newClientSysInfo);
+                
+//                // Obtener specs del cliente
+//                for(Map.Entry<String,Object> element: specs.entrySet()) {
+//                	System.out.println(element.getKey());
+//                	for(String spec: (String[]) element.getValue()) {
+//                		System.out.println(spec);
+//                	}
+//                }
+               
                 
                 System.out.println("Numero: " + counter);
 //                for(String info: newClientSysInfo) {
@@ -298,10 +324,11 @@ public class Servidor {
 		    ois = new ObjectInputStream(s.getInputStream());
 		
 		    oos.writeObject(systemInfo);
-		    HashMap<String, Object> ranking = (HashMap<String, Object>) ois.readObject();
-		    for(Object element: ranking.entrySet()) {
-		    	System.out.println(element);
-		    }
+		    isServer = (boolean) ois.readObject();
+		    
+//		    for(Object element: ranking.entrySet()) {
+//		    	System.out.println(element);
+//		    }
 //	        System.out.println( "Valor de servidor: " + ret);
 	        
 	    }
