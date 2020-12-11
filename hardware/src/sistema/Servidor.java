@@ -59,8 +59,7 @@ public class Servidor {
     			}    			
     		} else {
     			try {
-    				System.out.println("Ahora soy cliente!");
-//    				funcionCliente();
+    				isServer = funcionCliente();
     			} catch(Exception ex) {
     				System.out.println(ex);
     			}
@@ -190,7 +189,9 @@ public class Servidor {
         }
     }
     
-    static void funcionCliente() throws Exception {
+    static boolean funcionCliente() throws Exception {
+    	
+    	boolean isClientServer = false;
     	 //Index.index();
 		ObjectOutputStream oos = null;
 	    ObjectInputStream ois = null;
@@ -324,7 +325,7 @@ public class Servidor {
 		    ois = new ObjectInputStream(s.getInputStream());
 		
 		    oos.writeObject(systemInfo);
-		    isServer = (boolean) ois.readObject();
+		    isClientServer = (boolean) ois.readObject();
 		    
 //		    for(Object element: ranking.entrySet()) {
 //		    	System.out.println(element);
@@ -341,6 +342,12 @@ public class Servidor {
 		    if( ois != null ) ois.close();
 		    if( oos != null ) oos.close();
 		    if( s != null ) s.close();
+	    }
+	    
+	    if(isClientServer) {
+	    	return true;
+	    } else {
+	    	return false;
 	    }
     }
 }

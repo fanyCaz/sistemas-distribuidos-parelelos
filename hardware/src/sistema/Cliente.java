@@ -164,10 +164,12 @@ public class Cliente {
 		    ois = new ObjectInputStream(s.getInputStream());
 		
 		    oos.writeObject(systemInfo);
-		    HashMap<String, Object> ranking = (HashMap<String, Object>) ois.readObject();
-		    for(Object element: ranking.entrySet()) {
-		    	System.out.println(element);
-		    }
+		    boolean isServer = (boolean) ois.readObject();
+		    
+//		    HashMap<String, Object> ranking = (HashMap<String, Object>) ois.readObject();
+//		    for(Object element: ranking.entrySet()) {
+//		    	System.out.println(element);
+//		    }
 //	        System.out.println( "Valor de servidor: " + ret);
 	        
 	    }
