@@ -116,10 +116,10 @@ public class Servidor {
                 double prcLibreCPU = Double.parseDouble(clientSysInfo[4]) * 0.8;
                 double anchBand = Double.parseDouble(clientSysInfo[12]) * 0.3;
                 
-                System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
-                System.out.println("Porcentaje de RAM: " + prcRAM);
-                System.out.println("Porcentaje CPU: " + prcLibreCPU);
-                System.out.println("AB: " + anchBand);
+//                System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
+//                System.out.println("Porcentaje de RAM: " + prcRAM);
+//                System.out.println("Porcentaje CPU: " + prcLibreCPU);
+//                System.out.println("AB: " + anchBand);
                 
                 double sumaNuevoRanking = prcAlmacenamiento + prcRAM + prcLibreCPU + anchBand;
                 
@@ -128,7 +128,11 @@ public class Servidor {
                 
                 //Actualizar ranking en hash
                 ranking.replace(direccionCliente, sumaNuevoRanking);
-                System.out.println("Ranking de " + direccionCliente + " : " + ranking.get(direccionCliente));
+//                System.out.println("Ranking de " + direccionCliente + " : " + ranking.get(direccionCliente));
+                
+                for(Object element: ranking.entrySet()) {
+                	System.out.println(element);
+    		    }
                 
                 // 
                 double tempMayor = Double.MIN_VALUE;
@@ -144,9 +148,10 @@ public class Servidor {
                 
                 if(!ipRankMayor.equals(rankMayor)) {
                     // Devolver respuesta
-                    oos.writeObject(true);
+                    oos.writeObject(new Object[] {true, ranking});
                     
                     //Cerrar conexion
+                    s.close();
                     oos.close();
                     ois.close();
                     return false;
@@ -174,11 +179,6 @@ public class Servidor {
 //                	System.out.println(info);                	
 //                } 
                 
-                //Cont 
-                cont++;
-                if(cont > 5) {
-                	return false;
-                }
                 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -326,12 +326,14 @@ public class Servidor {
 //	    	}
 	    	
 		    // instancio el server con la IP y el PORT
-		    s = new Socket("25.5.218.12",5432);
+		    s = new Socket("25.3.236.220",5430);
 		    oos = new ObjectOutputStream(s.getOutputStream());
 		    ois = new ObjectInputStream(s.getInputStream());
 		
 		    oos.writeObject(systemInfo);
-		    isClientServer = (boolean) ois.readObject();
+		    Object[] responseArray = (Object[]) ois.readObject();
+		    isClientServer = (boolean) responseArray[0];
+		    ranking = (HashMap<String, Double>) responseArray[1];
 		    
 //		    for(Object element: ranking.entrySet()) {
 //		    	System.out.println(element);
@@ -350,10 +352,6 @@ public class Servidor {
 		    if( s != null ) s.close();
 	    }
 	    
-	    if(isClientServer) {
-	    	return true;
-	    } else {
-	    	return false;
-	    }
+	    return isClientServer;
     }
 }
