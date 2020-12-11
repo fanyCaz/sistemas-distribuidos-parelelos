@@ -44,15 +44,16 @@ public class Servidor {
     	specs.put("25.5.218.12", new String[] {});
     	
     	// Inicializar servidor mayor
-    	rankMayor = "25.5.218.12";
+    	rankMayor = "25.3.236.220";
     	
     	//
-    	isServer = true;
+    	isServer = false;
     	
     	//
     	while(true) {
     		if(isServer) {
     			try {
+    				System.out.println("espera servidor");
     				Thread.sleep(5000);
     				isServer = funcionServidor();
     			} catch(Exception ex) {
@@ -60,24 +61,21 @@ public class Servidor {
     			}    			
     		} else {
     			try {
+    				System.out.println("espera cliente");
     				Thread.sleep(5000);
     				isServer = funcionCliente();
     			} catch(Exception ex) {
     				System.out.println(ex);
     			}
     		}
-    	} 
-    	
-    	
-    	
-        
+    	}
     }
     
     static boolean funcionServidor() throws Exception {
     	ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
         Socket s = null;
-        ServerSocket ss = new ServerSocket(5432);
+        ServerSocket ss = new ServerSocket(5430);
         int counter = 1;
         System.out.println("Servidor conectado");
         int cont = 0;
@@ -90,8 +88,11 @@ public class Servidor {
                 oos = new ObjectOutputStream(s.getOutputStream());
                 String[] clientSysInfo = (String[])ois.readObject();
                 
-                //Nuevo arreglo de string con infomración del sistema + direccion y nombre del host
-                
+                //Informacion Actual de Server
+                String[] ServerSysInfo = funcionObtenerInformacion();
+                specs.replace(rankMayor, ServerSysInfo);
+                ranking.replace(rankMayor, funcionObtenerRanking(ServerSysInfo));
+                //Nuevo arreglo de string con infomración del sistema del cliente + direccion y nombre del host
                 String[] newClientSysInfo = {
                 		"Nombre del host: " + s.getInetAddress().getHostName(),
                 		"Direccion IP: " + s.getInetAddress().getHostAddress(),
@@ -110,24 +111,13 @@ public class Servidor {
                 		"Ancho de banda: " + clientSysInfo[12]// SO
                 		};
                 
-                // Suma de ranking
-                double prcAlmacenamiento = Double.parseDouble(clientSysInfo[9]) / Double.parseDouble(clientSysInfo[10]) * 0.05;
-                double prcRAM = ((Double.parseDouble(clientSysInfo[6])/ 1000000000) * 100) / (Double.parseDouble(clientSysInfo[5]) / 1000000000);
-                double prcLibreCPU = Double.parseDouble(clientSysInfo[4]) * 0.8;
-                double anchBand = Double.parseDouble(clientSysInfo[12]) * 0.3;
                 
-//                System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
-//                System.out.println("Porcentaje de RAM: " + prcRAM);
-//                System.out.println("Porcentaje CPU: " + prcLibreCPU);
-//                System.out.println("AB: " + anchBand);
-                
-                double sumaNuevoRanking = prcAlmacenamiento + prcRAM + prcLibreCPU + anchBand;
                 
                 // Obtener ip
                 String direccionCliente = s.getInetAddress().getHostAddress();
-                
+                double sumaRankingCliente = funcionObtenerRanking(newClientSysInfo);
                 //Actualizar ranking en hash
-                ranking.replace(direccionCliente, sumaNuevoRanking);
+                ranking.replace(direccionCliente, sumaRankingCliente);
 //                System.out.println("Ranking de " + direccionCliente + " : " + ranking.get(direccionCliente));
                 
                 for(Object element: ranking.entrySet()) {
@@ -156,7 +146,7 @@ public class Servidor {
                     ois.close();
                     return false;
                 } else {
-                	oos.writeObject(false);
+                	oos.writeObject(new Object[] {false, ranking});
                 }
                 
                 System.out.println("El mayor es la ip: " + rankMayor);
@@ -202,6 +192,46 @@ public class Servidor {
 		ObjectOutputStream oos = null;
 	    ObjectInputStream ois = null;
 	    Socket s = null;
+
+	    Thread.sleep(2000); //Sleep for a bit longer, 2s should cover almost every possible problem
+	    String systemInfo[] = funcionObtenerInformacion();
+	    try
+	    {
+//	    	for(var infos: systemInfo) {
+//	    		System.out.println(infos);
+//	    	}
+	    	
+		    // instancio el server con la IP y el PORT
+		    s = new Socket("25.5.218.12",5432);
+		    oos = new ObjectOutputStream(s.getOutputStream());
+		    ois = new ObjectInputStream(s.getInputStream());
+		
+		    oos.writeObject(systemInfo);
+		    Object[] responseArray = (Object[]) ois.readObject();
+		    isClientServer = (boolean) responseArray[0];
+		    ranking = (HashMap<String, Double>) responseArray[1];
+		    
+//		    for(Object element: ranking.entrySet()) {
+//		    	System.out.println(element);
+//		    }
+//	        System.out.println( "Valor de servidor: " + ret);
+	        
+	    }
+	    catch(Exception ex)
+	    {
+	    	ex.printStackTrace();
+	    }
+	    finally
+	    {
+		    if( ois != null ) ois.close();
+		    if( oos != null ) oos.close();
+		    if( s != null ) s.close();
+	    }
+	    
+	    return isClientServer;
+    }
+    
+    static String[] funcionObtenerInformacion() {
 	    SystemInfo si = new SystemInfo();
 	    HardwareAbstractionLayer hal = si.getHardware();
 	    
@@ -209,7 +239,6 @@ public class Servidor {
 	    var net = hal.getNetworkIFs().get(0);
 	    long download1 = net.getBytesRecv();
 	    long timestamp1 = net.getTimeStamp();
-	    Thread.sleep(2000); //Sleep for a bit longer, 2s should cover almost every possible problem
 	    net.updateAttributes(); //Updating network stats
 	    long download2 = net.getBytesRecv();
 	    long timestamp2 = net.getTimeStamp();
@@ -318,40 +347,21 @@ public class Servidor {
 	    			 SO,
 	    			 String.valueOf(bandwidth)
 	   			};
-	   
-	    try
-	    {
-//	    	for(var infos: systemInfo) {
-//	    		System.out.println(infos);
-//	    	}
-	    	
-		    // instancio el server con la IP y el PORT
-		    s = new Socket("25.3.236.220",5430);
-		    oos = new ObjectOutputStream(s.getOutputStream());
-		    ois = new ObjectInputStream(s.getInputStream());
-		
-		    oos.writeObject(systemInfo);
-		    Object[] responseArray = (Object[]) ois.readObject();
-		    isClientServer = (boolean) responseArray[0];
-		    ranking = (HashMap<String, Double>) responseArray[1];
-		    
-//		    for(Object element: ranking.entrySet()) {
-//		    	System.out.println(element);
-//		    }
-//	        System.out.println( "Valor de servidor: " + ret);
-	        
-	    }
-	    catch(Exception ex)
-	    {
-	    	ex.printStackTrace();
-	    }
-	    finally
-	    {
-		    if( ois != null ) ois.close();
-		    if( oos != null ) oos.close();
-		    if( s != null ) s.close();
-	    }
-	    
-	    return isClientServer;
+	   return systemInfo;
+    }
+    
+    static double funcionObtenerRanking(String[] SysInfo) {
+    	// Suma de ranking
+        double prcAlmacenamiento = Double.parseDouble(SysInfo[9]) / Double.parseDouble(SysInfo[10]) * 0.05;
+        double prcRAM = ((Double.parseDouble(SysInfo[6])/ 1000000000) * 100) / (Double.parseDouble(SysInfo[5]) / 1000000000);
+        double prcLibreCPU = Double.parseDouble(SysInfo[4]) * 0.8;
+        double anchBand = Double.parseDouble(SysInfo[12]) * 0.3;
+        
+//        System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
+//        System.out.println("Porcentaje de RAM: " + prcRAM);
+//        System.out.println("Porcentaje CPU: " + prcLibreCPU);
+//        System.out.println("AB: " + anchBand);
+        
+        return (prcAlmacenamiento + prcRAM + prcLibreCPU + anchBand);
     }
 }
