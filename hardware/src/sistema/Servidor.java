@@ -2,6 +2,8 @@ package sistema;
 
 import java.net.ServerSocket;
 import java.util.HashMap;
+import java.util.Map;
+
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.HardwareAbstractionLayer;
@@ -16,11 +18,18 @@ import java.io.ObjectOutputStream;
 public class Servidor {
 	// Inicializar hash map
 	static HashMap<String, Object> ranking = new HashMap<String, Object>(); 
+	static HashMap<String, Object> specs = new HashMap<String, Object>();
 	
     public static void main(String[] args) throws Exception {
+    	// Inicializando el hash de ranking para las ips
     	ranking.put("25.3.236.220", 0);
     	ranking.put("25.5.249.224", 0);
     	ranking.put("25.5.218.12", 0);
+    	
+    	// Inicializando el hash de espcificaciones del sistema para las ips
+    	specs.put("25.3.236.220", new String[] {});
+    	specs.put("25.5.249.224", new String[] {});
+    	specs.put("25.5.218.12", new String[] {});
     	
         ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
@@ -63,20 +72,33 @@ public class Servidor {
                 double prcLibreCPU = Double.parseDouble(clientSysInfo[4]) * 0.8;
                 double anchBand = Double.parseDouble(clientSysInfo[12]) * 0.3;
                 
-                System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
-                System.out.println("Porcentaje de RAM: " + prcRAM);
-                System.out.println("Porcentaje CPU: " + prcLibreCPU);
-                System.out.println("AB: " + anchBand);
+//                System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
+//                System.out.println("Porcentaje de RAM: " + prcRAM);
+//                System.out.println("Porcentaje CPU: " + prcLibreCPU);
+//                System.out.println("AB: " + anchBand);
                 
                 double sumaNuevoRanking = prcAlmacenamiento + prcRAM + prcLibreCPU + anchBand;
                 
-                //Actualizar ranking en hash
+                // Obtener ip
                 String direccionCliente = s.getInetAddress().getHostAddress();
+                
+                //Actualizar ranking en hash
                 ranking.replace(direccionCliente, sumaNuevoRanking);
                 System.out.println("Ranking de " + direccionCliente + " : " + ranking.get(direccionCliente));
                 
+                // Actualizar specs del cliente
+                specs.replace(direccionCliente, newClientSysInfo);
                 
-                oos.writeObject("Respuesta recibida!");
+                // Obtener specs del cliente
+                for(Map.Entry<String,Object> element: specs.entrySet()) {
+                	System.out.println(element.getKey());
+                	for(String spec: (String[]) element.getValue()) {
+                		System.out.println(spec);
+                	}
+                }
+                
+                
+                oos.writeObject(ranking);
                 System.out.println("Numero: " + counter);
 //                for(String info: newClientSysInfo) {
 //                	System.out.println(info);                	

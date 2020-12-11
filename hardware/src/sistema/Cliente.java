@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import oshi.SystemInfo;
@@ -29,6 +30,7 @@ import com.sun.management.OperatingSystemMXBean;
 
 public class Cliente {
 	 public static void main(String args[]) throws Exception {
+		 
 		 //Index.index();
 		ObjectOutputStream oos = null;
 	    ObjectInputStream ois = null;
@@ -162,8 +164,11 @@ public class Cliente {
 		    ois = new ObjectInputStream(s.getInputStream());
 		
 		    oos.writeObject(systemInfo);
-		    String ret = (String)ois.readObject();
-	        System.out.println( "Valor de servidor: " + ret);
+		    HashMap<String, Object> ranking = (HashMap<String, Object>) ois.readObject();
+		    for(Object element: ranking.entrySet()) {
+		    	System.out.println(element);
+		    }
+//	        System.out.println( "Valor de servidor: " + ret);
 	        
 	    }
 	    catch(Exception ex)
