@@ -5,4 +5,5 @@ module cliente {
     requires com.sun.jna;
     requires com.sun.jna.platform;
     requires org.slf4j.simple;
+	requires java.desktop;
 }

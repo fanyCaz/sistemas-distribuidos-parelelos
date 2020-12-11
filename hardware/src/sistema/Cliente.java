@@ -1,6 +1,7 @@
 package sistema;
 
 import java.io.ObjectInputStream;
+import sistema.tabla;
 import java.io.ObjectOutputStream;
 import java.lang.management.ManagementFactory;
 import java.net.Socket;

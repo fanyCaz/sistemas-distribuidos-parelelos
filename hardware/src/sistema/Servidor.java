@@ -1,5 +1,7 @@
 package sistema;
+import sistema.tabla;
 
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,8 @@ public class Servidor {
 	static HashMap<String, Object> specs = new HashMap<String, Object>();
 	static String rankMayor;
 	static boolean isServer;
+
+	static tabla tablaRanking;
 	
 	
     public static void main(String[] args) {
@@ -46,16 +50,16 @@ public class Servidor {
     	
     	// Inicializar servidor mayor
     	rankMayor = "25.5.218.12";
-    	isServer = false;
+    	isServer = true;
+    	
+    	// Iniciar interfaz
+//    	tablaRanking.update(valoresTabla);
+    	tablaRanking = new tabla();
+    	
     	
     	try {
-    		Socket s = null;
-    		ServerSocket ss = new ServerSocket(5432);
-    		String miIp = s.getInetAddress().getHostAddress();
-    		if(!miIp.equals(rankMayor)) {
-    			isServer = false;    			
-    		}
-    		
+    		InetAddress localhost = InetAddress.getLocalHost();
+    		System.out.println(localhost.getHostAddress());
     	} catch(Exception ex) {
     		System.out.println(ex);
     	}
@@ -105,7 +109,23 @@ public class Servidor {
                 //Informacion Actual de Server
                 String[] ServerSysInfo = funcionObtenerInformacion();
                 specs.replace(rankMayor, ServerSysInfo);
-                ranking.replace(rankMayor, funcionObtenerRanking(ServerSysInfo));
+                
+                // Suma ranking server
+                double prcAlmacenamiento = Double.parseDouble(ServerSysInfo[9]) / Double.parseDouble(ServerSysInfo[10]) * 0.2;
+                double prcRAM = ((Double.parseDouble(ServerSysInfo[6])/ 1000000000) * 100) / (Double.parseDouble(ServerSysInfo[5]) / 1000000000);
+                double prcLibreCPU = Double.parseDouble(ServerSysInfo[4]) * 0.8;
+                
+                double sumaRankingServer = prcAlmacenamiento +  prcRAM + prcLibreCPU;
+               
+               // Actualizar ranking server 
+                ranking.replace(rankMayor, sumaRankingServer);
+                
+                
+                //Actualizar tabla
+                tablaRanking.update(rankMayor,prcRAM, prcLibreCPU, prcAlmacenamiento, sumaRankingServer);
+                
+
+                
                 //Nuevo arreglo de string con infomración del sistema del cliente + direccion y nombre del host
                 String[] newClientSysInfo = {
                 		"Nombre del host: " + s.getInetAddress().getHostName(),
@@ -129,7 +149,17 @@ public class Servidor {
                 
                 // Obtener ip
                 String direccionCliente = s.getInetAddress().getHostAddress();
-                double sumaRankingCliente = funcionObtenerRanking(clientSysInfo);
+                
+             // Suma ranking Cliente
+                prcAlmacenamiento = Double.parseDouble(clientSysInfo[9]) / Double.parseDouble(clientSysInfo[10]) * 0.2;
+                prcRAM = ((Double.parseDouble(clientSysInfo[6])/ 1000000000) * 100) / (Double.parseDouble(clientSysInfo[5]) / 1000000000);
+                prcLibreCPU = Double.parseDouble(clientSysInfo[4]) * 0.8;
+                
+                double sumaRankingCliente = prcAlmacenamiento +  prcRAM + prcLibreCPU;
+                
+                // Actualizar tabla 
+                tablaRanking.update(direccionCliente, prcRAM, prcLibreCPU, prcAlmacenamiento, sumaRankingCliente);
+                
                 //Actualizar ranking en hash
                 ranking.replace(direccionCliente, sumaRankingCliente);
 //                System.out.println("Ranking de " + direccionCliente + " : " + ranking.get(direccionCliente));
@@ -199,6 +229,7 @@ public class Servidor {
         }
     }
     
+
     static boolean funcionCliente() throws Exception {
     	
     	boolean isClientServer = false;
@@ -371,9 +402,9 @@ public class Servidor {
         double prcLibreCPU = Double.parseDouble(SysInfo[4]) * 0.8;
 //        double anchBand = Double.parseDouble(SysInfo[12]) * 0.3;
         
-        System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
-        System.out.println("Porcentaje de RAM: " + prcRAM);
-        System.out.println("Porcentaje CPU: " + prcLibreCPU);
+//        System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
+//        System.out.println("Porcentaje de RAM: " + prcRAM);
+//        System.out.println("Porcentaje CPU: " + prcLibreCPU);
 //        System.out.println("AB: " + anchBand);
         
         return (prcAlmacenamiento +  prcRAM + prcLibreCPU);
