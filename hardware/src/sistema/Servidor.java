@@ -53,12 +53,14 @@ public class Servidor {
     	while(true) {
     		if(isServer) {
     			try {
+    				Thread.sleep(5000);
     				isServer = funcionServidor();
     			} catch(Exception ex) {
     				System.out.println(ex);
     			}    			
     		} else {
     			try {
+    				Thread.sleep(5000);
     				isServer = funcionCliente();
     			} catch(Exception ex) {
     				System.out.println(ex);
@@ -143,6 +145,10 @@ public class Servidor {
                 if(!ipRankMayor.equals(rankMayor)) {
                     // Devolver respuesta
                     oos.writeObject(true);
+                    
+                    //Cerrar conexion
+                    oos.close();
+                    ois.close();
                     return false;
                 } else {
                 	oos.writeObject(false);
