@@ -175,7 +175,7 @@ public class Servidor {
                 if(!ipRankMayor.equals(rankMayor)) {
                     // Devolver respuesta
                 	rankMayor = ipRankMayor;
-                    oos.writeObject(new Object[] {true, ranking});
+                    oos.writeObject(new Object[] {true, ranking,rankMayor});
                     //Cambiar interfaces
                     tablaRanking.cambiarVisibilidad();
         			interfazCliente.cambiarVisibilidad();
@@ -248,6 +248,7 @@ public class Servidor {
 		    Object[] responseArray = (Object[]) ois.readObject();
 		    isClientServer = (boolean) responseArray[0];
 		    ranking = (HashMap<String, Double>) responseArray[1];
+		    rankMayor = (String) responseArray[2];
 		    
 		    if(isClientServer) {
 		    	oos.close();
