@@ -122,7 +122,7 @@ public class Servidor {
                 
                 
                 //Actualizar tabla
-                tablaRanking.update(rankMayor,prcRAM, prcLibreCPU, prcAlmacenamiento, sumaRankingServer);
+                tablaRanking.update(rankMayor,prcRAM, Double.parseDouble(ServerSysInfo[4]), prcAlmacenamiento, sumaRankingServer);
                 
 
                 
@@ -158,7 +158,7 @@ public class Servidor {
                 double sumaRankingCliente = prcAlmacenamiento +  prcRAM + prcLibreCPU;
                 
                 // Actualizar tabla 
-                tablaRanking.update(direccionCliente, prcRAM, prcLibreCPU, prcAlmacenamiento, sumaRankingCliente);
+                tablaRanking.update(direccionCliente, prcRAM, Double.parseDouble(clientSysInfo[4]), prcAlmacenamiento, sumaRankingCliente);
                 
                 //Actualizar ranking en hash
                 ranking.replace(direccionCliente, sumaRankingCliente);
