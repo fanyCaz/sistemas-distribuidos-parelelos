@@ -51,7 +51,7 @@ public class Servidor {
     	
     	// Inicializar servidor mayor
     	rankMayor = "25.5.218.12";
-    	isServer = false;
+    	isServer = true;
     	
     	
     	
@@ -60,7 +60,7 @@ public class Servidor {
     	    HardwareAbstractionLayer hal = si.getHardware();
     	    String myIp = hal.getNetworkIFs().get(0).getIPv4addr()[0];
     	    if(!myIp.equals(rankMayor)) {
-    	    	rankMayor = myIp;
+    	    	isServer = false;
     	    }
     	} catch(Exception ex) {
     		System.out.println(ex);
