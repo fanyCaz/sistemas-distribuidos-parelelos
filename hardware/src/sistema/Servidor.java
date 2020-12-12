@@ -311,8 +311,18 @@ public class Servidor {
 //	    System.out.println( si.getOperatingSystem().getProcessCount());	//Numero de procesos principales
 	    OperatingSystemMXBean f = ManagementFactory.getPlatformMXBean( OperatingSystemMXBean.class ) ;
 	    
-	    //System.out.println( f.getProcessCpuLoad() );
-	    double prcUsoCPU = f.getProcessCpuLoad() * 100;
+	    double start = System.nanoTime()/1000000;
+	    double prcUsoCPU = 0.0;
+	    double timeElapsed = 0.0;
+	    while(timeElapsed < 2) {
+	    	double finish = System.nanoTime()/1000000;
+		    timeElapsed = (finish - start) / 1000;
+		    
+		    prcUsoCPU = f.getSystemCpuLoad();
+	    }
+	    
+	    prcUsoCPU = prcUsoCPU * 100;
+	    System.out.println(prcUsoCPU);
 	    String prcCPU = String.valueOf(prcUsoCPU) + "%";
 	    String prcLibreCPU = String.valueOf(100 - prcUsoCPU) + "%";
 	    
