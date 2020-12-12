@@ -65,7 +65,7 @@ public class Servidor {
     		if(isServer) {
     			try {
     				System.out.println("espera servidor");
-    				Thread.sleep(10000);
+    				Thread.sleep(3000);
     				isServer = funcionServidor();
     			} catch(Exception ex) {
     				System.out.println(ex);
@@ -73,7 +73,7 @@ public class Servidor {
     		} else {
     			try {
     				System.out.println("espera cliente");
-    				Thread.sleep(10000);
+    				Thread.sleep(5000);
     				isServer = funcionCliente();
     			} catch(Exception ex) {
     				System.out.println(ex);
