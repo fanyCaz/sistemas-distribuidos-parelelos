@@ -58,8 +58,12 @@ public class Servidor {
     	
     	
     	try {
-    		InetAddress localhost = InetAddress.getLocalHost();
-    		System.out.println(localhost.getHostAddress());
+    		SystemInfo si = new SystemInfo();
+    	    HardwareAbstractionLayer hal = si.getHardware();
+    	    String myIp = hal.getNetworkIFs().get(0).getIPv4addr()[0];
+//    	    if(!myIp.equals(rankMayor)) {
+//    	    	rankMayor = myIp;
+//    	    }
     	} catch(Exception ex) {
     		System.out.println(ex);
     	}
