@@ -186,7 +186,7 @@ public class Servidor {
                     ois.close();
                     return false;
                 } else {
-                	oos.writeObject(new Object[] {false, ranking});
+                	oos.writeObject(new Object[] {false, ranking, rankMayor});
                 }
                 
                 System.out.println("El mayor es la ip: " + rankMayor);
