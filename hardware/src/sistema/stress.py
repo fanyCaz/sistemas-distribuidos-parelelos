@@ -9,6 +9,7 @@ import sys
 
 def f(x):
     start = time.time()
+    ram = sys.argv[2] * 1000000
     a = []
     while(time.time() - start < int(sys.argv[1])):
         x*x

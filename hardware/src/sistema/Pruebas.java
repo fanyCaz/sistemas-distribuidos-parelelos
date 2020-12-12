@@ -11,7 +11,7 @@ public class Pruebas {
 			String fileName = "stress.py";
 			String path= System.getProperty("user.dir") + "\\src\\sistema\\" + fileName;
 			String stressSecs = "30";
-			Process process = Runtime.getRuntime().exec(new String[] {"python",path,"30"});
+			Process process = Runtime.getRuntime().exec(new String[] {"python",path,"30","6"});
 		} catch(Exception ex) {
 			System.out.println(ex);
 		}
