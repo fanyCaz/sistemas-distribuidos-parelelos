@@ -88,7 +88,13 @@ public class Servidor {
         Socket s = null;
         ServerSocket ss = new ServerSocket(5432);
         System.out.println("Servidor conectado");
-        int cont = 0;
+        int contadorEstres = 0;
+        
+      //Checar si contador es 5 para ejecutar la prueba de estres
+        if(contadorEstres >= 5) {
+        	pruebaEstres();
+        }
+        
         while (true) {
             try {
                 // el ServerSocket me da el Socket
@@ -151,7 +157,11 @@ public class Servidor {
                 double sumaRankingCliente = prcAlmacenamiento +  prcRAM + prcLibreCPU;
                 
                 // Actualizar tabla 
+                double almacenamiento = Double.parseDouble(clientSysInfo[9]);
+                almacenamiento = almacenamiento / 1000000000;
                 tablaRanking.update(direccionCliente, prcRAM, Double.parseDouble(clientSysInfo[4]), prcAlmacenamiento, sumaRankingCliente);
+                tablaRanking.updateStatic(direccionCliente, ""+almacenamiento , clientSysInfo[11].toString(), clientSysInfo[5].toString(), clientSysInfo[0]);
+                tablaRanking.updateDinamic(direccionCliente, ""+prcAlmacenamiento, ""+prcRAM, clientSysInfo[4], clientSysInfo[12]);
                 
                 //Actualizar ranking en hash
                 ranking.replace(direccionCliente, sumaRankingCliente);
@@ -196,6 +206,10 @@ public class Servidor {
                 
                 // Actualizar specs del cliente
                 specs.replace(direccionCliente, newClientSysInfo);
+                
+                // INcrementar contador para la prueba de estres
+                contadorEstres = contadorEstres + 1;
+                 
                 
 //                // Obtener specs del cliente
 //                for(Map.Entry<String,Object> element: specs.entrySet()) {
@@ -423,5 +437,16 @@ public class Servidor {
 //        System.out.println("AB: " + anchBand);
         
         return (prcAlmacenamiento +  prcRAM + prcLibreCPU);
+    }
+    
+    static void pruebaEstres() {
+		try {
+			String fileName = "stress.py";
+			String path= System.getProperty("user.dir") + "\\src\\sistema\\" + fileName;
+			String stressSecs = "30";
+			Process process = Runtime.getRuntime().exec(new String[] {"python",path,"30","6"});
+		} catch(Exception ex) {
+			System.out.println(ex);
+		}
     }
 }

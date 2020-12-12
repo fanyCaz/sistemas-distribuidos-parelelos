@@ -14,16 +14,19 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 public class tabla extends JFrame{
-	public String ip1 = "a";
 	JTable table;
 	Object[][] datos;
+	JPanel panel;
+	Object[][] estaticos;
+	Object[][] dinamicos;
 	public boolean isVisible = true;
 	
      public tabla(boolean isServer)
         {
     	 this.isVisible = isServer;
-    	 JPanel panel = new JPanel();
+    	 panel = new JPanel();
     	 panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+    	 panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
     	 
 //    	 JPanel panel1=new JPanel();
     	 this.datos = new Object[][] {
@@ -37,20 +40,21 @@ public class tabla extends JFrame{
             String[] columns = new String[] {
                 "Ip", "%Ram", "%CPU", "Almacenamiento", "Ranking"
             };
-            Object[][] estaticos = new Object[][] {
-            	{"Datos estaticos", "IP1", "IP2", "IP3"},
+            estaticos = new Object[][] {
+            	{"Datos estaticos", "25.3.236.220", "25.5.249.224", "25.5.218.12"},
             	{"Disco Duro",0,0,0},
             	{"Sistema operativo", 0,0,0},
-            	{"RAM total del procesador",0,0,0}
+            	{"RAM total",0,0,0},
+            	{"Procesador",0,0,0}
             };
-            String[] ipes=new String[] {"Datos estaticos","IP1", "IP2", "IP3"};
-            String[] ipes2=new String[] {"Datos dinamicos","IP1","IP2","IP3"};
-            Object[][] dinamicos=new Object[][] {
-            	{"Datos dinamicos", "IP1","IP2","IP3"},
-            	{"Espacio libre HDD","no", "si", "maso"},
-            	{"% libre de RAM","si", "maso", "no"},
-            	{"% libre de procesador","maso","no","si"},
-            	{"% libre de ancho de banda","a","yu","da"},
+            String[] ipes=new String[] {"Datos estaticos","25.3.236.220", "25.5.249.224", "25.5.218.12"};
+            String[] ipes2=new String[] {"Datos dinamicos","25.3.236.220","25.5.249.224","25.5.218.12"};
+            dinamicos=new Object[][] {
+            	{"Datos dinamicos", "25.3.236.220","25.5.249.224","25.5.218.12"},
+            	{"Espacio libre HDD",0, 0, 0},
+            	{"% libre de RAM",0, 0, 0},
+            	{"% libre de procesador",0,0,0},
+            	{"% libre de ancho de banda",0,0,0},
             };
             //create table with dataS
             
@@ -59,14 +63,15 @@ public class tabla extends JFrame{
             JTable tablaDinamica=new JTable(dinamicos,ipes2);
             
             JLabel rankings = new JLabel("Tabla de ranking");
+            rankings.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
             JLabel estaticas = new JLabel("Propiedades estaticas");
+            estaticas.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
             JLabel dinamicas = new JLabel("Propiedades dinamicas");
+            dinamicas.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
             //add the table to the frame
 
             panel.add(rankings, BorderLayout.CENTER);
             panel.add(table, BorderLayout.CENTER);
-            
-            table.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
             panel.add(estaticas, BorderLayout.CENTER);
             panel.add(tablaEstatica, BorderLayout.CENTER);
             panel.add(dinamicas, BorderLayout.CENTER);
@@ -77,7 +82,7 @@ public class tabla extends JFrame{
              
             
 
-            this.setTitle("Interfaz");
+            this.setTitle("Interfaz servidor");
             
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
             
@@ -95,14 +100,42 @@ public class tabla extends JFrame{
     		 }
     	 }
     	 
-    	 this.table.repaint();
+    	 this.panel.repaint();
+     }
+     
+     void updateStatic(String ip, String hdd, String SO, String ram, String procesador) {
+    	 int index = 3;
+    	 if(ip.equals("25.3.236.220")) {
+    		 index = 1;
+    	 }
+    	 else if(ip.equals("25.5.249.224")) {
+    		 index = 2;
+    	 } 
+    	 estaticos[1][index] = hdd;
+    	 estaticos[2][index] = SO;
+    	 estaticos[3][index] = ram;
+    	 estaticos[4][index] = procesador;
+    	 this.panel.repaint();
+    	 
+     }
+     
+     void updateDinamic(String ip, String hdd, String ram, String procesador, String ancho) {
+    	 int index = 3;
+    	 if(ip.equals("25.3.236.220")) {
+    		 index = 1;
+    	 }
+    	 else if(ip.equals("25.5.249.224")) {
+    		 index = 2;
+    	 } 
+    	 dinamicos[1][index] = hdd;
+    	 dinamicos[2][index] = ram;
+    	 dinamicos[3][index] = procesador;
+    	 dinamicos[4][index] = ancho;
+    	 this.panel.repaint();
      }
      
      void cambiarVisibilidad() {
     	 isVisible = !isVisible;
     	 this.setVisible(isVisible);
-     }
-     public static void main(String[] args) {
-    	 tabla tabla1=new tabla(true);
      }
 }
