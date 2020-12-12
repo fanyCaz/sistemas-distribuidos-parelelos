@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -23,6 +24,9 @@ public class tabla extends JFrame{
 	
      public tabla(boolean isServer)
         {
+    	 
+    	 Font miEstilo = new Font("Sans Serif", Font.PLAIN, 15);
+    	 
     	 this.isVisible = isServer;
     	 panel = new JPanel();
     	 panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
@@ -59,15 +63,22 @@ public class tabla extends JFrame{
             //create table with dataS
             
             JTable table = new JTable(datos, columns);
+            table.setFont(miEstilo);
             JTable tablaEstatica =new JTable(estaticos, ipes);
+            tablaEstatica.setFont(miEstilo);
             JTable tablaDinamica=new JTable(dinamicos,ipes2);
+            tablaDinamica.setFont(miEstilo);
             
             JLabel rankings = new JLabel("Tabla de ranking");
             rankings.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+            rankings.setFont(miEstilo);
             JLabel estaticas = new JLabel("Propiedades estaticas");
+            estaticas.setFont(miEstilo);
             estaticas.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+            
             JLabel dinamicas = new JLabel("Propiedades dinamicas");
             dinamicas.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+            dinamicas.setFont(miEstilo);
             //add the table to the frame
 
             panel.add(rankings, BorderLayout.CENTER);
@@ -78,14 +89,9 @@ public class tabla extends JFrame{
             panel.add(tablaDinamica, BorderLayout.CENTER);
 
             this.add(new JScrollPane(panel));
-        
-             
-            
-
             this.setTitle("Interfaz servidor");
-            
+            this.setMinimumSize(new Dimension(700,400));
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
-            
             this.pack();
             this.setVisible(isVisible);
         }  
@@ -138,4 +144,8 @@ public class tabla extends JFrame{
     	 isVisible = !isVisible;
     	 this.setVisible(isVisible);
      }
+     
+//     public static void main(String[] args) {
+//    	 tabla tabla1 = new tabla(true);
+//     }
 }

@@ -91,11 +91,13 @@ public class Servidor {
         int contadorEstres = 0;
         
       //Checar si contador es 5 para ejecutar la prueba de estres
-        if(contadorEstres >= 5) {
-        	pruebaEstres();
-        }
+        
         
         while (true) {
+        	if(contadorEstres > 3) {
+            	pruebaEstres();
+            	contadorEstres = 0;
+            }
             try {
                 // el ServerSocket me da el Socket
                 s = ss.accept();
