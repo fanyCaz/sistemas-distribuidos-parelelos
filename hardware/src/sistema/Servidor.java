@@ -260,6 +260,12 @@ public class Servidor {
 		    isClientServer = (boolean) responseArray[0];
 		    ranking = (HashMap<String, Double>) responseArray[1];
 		    
+		    if(isClientServer) {
+		    	oos.close();
+		    	ois.close();
+		    	s.close();
+		    }
+		    
 //		    for(Object element: ranking.entrySet()) {
 //		    	System.out.println(element);
 //		    }
