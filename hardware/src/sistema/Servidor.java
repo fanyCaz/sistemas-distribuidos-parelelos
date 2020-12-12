@@ -35,6 +35,7 @@ public class Servidor {
 	static boolean isServer;
 
 	static tabla tablaRanking;
+	static InterfazCliente interfazCliente;
 	
 	
     public static void main(String[] args) {
@@ -50,11 +51,8 @@ public class Servidor {
     	
     	// Inicializar servidor mayor
     	rankMayor = "25.5.218.12";
-    	isServer = true;
+    	isServer = false;
     	
-    	// Iniciar interfaz
-//    	tablaRanking.update(valoresTabla);
-    	tablaRanking = new tabla();
     	
     	
     	try {
@@ -69,9 +67,13 @@ public class Servidor {
     	}
     	
     	
-    	//
+    	// Iniciar interfaz
+    	if(isServer) {
+    		tablaRanking = new tabla();    		
+    	} else {
+    		interfazCliente = new InterfazCliente(rankMayor);
+    	}
     	
-    	//
     	while(true) {
     		if(isServer) {
     			try {

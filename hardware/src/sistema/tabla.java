@@ -7,6 +7,7 @@ public class tabla extends JFrame{
 	public String ip1 = "a";
 	JTable table;
 	Object[][] datos;
+	public boolean isVisible = true;
 	
      public tabla()
         {
@@ -29,7 +30,7 @@ public class tabla extends JFrame{
             this.setTitle("Interfaz");
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);       
             this.pack();
-            this.setVisible(true);
+            this.setVisible(isVisible);
         }  
      
      void update(String ip, double ram, double cpu, double hdd, double ranking) {
@@ -43,4 +44,10 @@ public class tabla extends JFrame{
     	 }
     	 this.table.repaint();
      }
+     
+     void cambiarVisibilidad() {
+    	 isVisible = !isVisible;
+    	 this.setVisible(isVisible);
+     }
+     
 }
