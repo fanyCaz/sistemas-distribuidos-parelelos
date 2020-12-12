@@ -60,6 +60,8 @@ public class Servidor {
     	    HardwareAbstractionLayer hal = si.getHardware();
     	    myIp = hal.getNetworkIFs().get(0).getIPv4addr()[0];
     	    if(myIp.equals(rankMayor)) {
+    	    	isServer = true;
+    	    } else {
     	    	isServer = false;
     	    }
     	} catch(Exception ex) {
