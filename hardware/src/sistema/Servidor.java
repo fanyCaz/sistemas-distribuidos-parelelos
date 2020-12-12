@@ -54,19 +54,7 @@ public class Servidor {
     	isServer = true;
     	
     	
-    	String myIp = "";
-    	try {
-    		SystemInfo si = new SystemInfo();
-    	    HardwareAbstractionLayer hal = si.getHardware();
-    	    myIp = hal.getNetworkIFs().get(0).getIPv4addr()[0];
-    	    if(myIp.equals(rankMayor)) {
-    	    	isServer = true;
-    	    } else {
-    	    	isServer = false;
-    	    }
-    	} catch(Exception ex) {
-    		System.out.println(ex);
-    	}
+    	String myIp = "25.5.218.12";
     	
     	
     	// Iniciar interfaz
