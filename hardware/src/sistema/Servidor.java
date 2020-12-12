@@ -57,12 +57,9 @@ public class Servidor {
     	String myIp = "25.5.218.12";
     	
     	
-    	// Iniciar interfaz
-    	if(isServer) {
-    		tablaRanking = new tabla();    		
-    	} else {
-    		interfazCliente = new InterfazCliente(myIp);
-    	}
+    	
+    	tablaRanking = new tabla(isServer);    		
+    	interfazCliente = new InterfazCliente(myIp,!isServer);
     	
     	while(true) {
     		if(isServer) {
@@ -82,8 +79,6 @@ public class Servidor {
     				System.out.println(ex);
     			}
     		}
-    		tablaRanking.cambiarVisibilidad();
-			interfazCliente.cambiarVisibilidad();
     	}
     }
     
@@ -181,6 +176,10 @@ public class Servidor {
                     // Devolver respuesta
                 	rankMayor = ipRankMayor;
                     oos.writeObject(new Object[] {true, ranking});
+                    //Cambiar interfaces
+                    tablaRanking.cambiarVisibilidad();
+        			interfazCliente.cambiarVisibilidad();
+                    
                     //Cerrar conexion
                     s.close();
                     oos.close();

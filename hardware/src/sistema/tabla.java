@@ -9,8 +9,9 @@ public class tabla extends JFrame{
 	Object[][] datos;
 	public boolean isVisible = true;
 	
-     public tabla()
+     public tabla(boolean isServer)
         {
+    	 this.isVisible = isServer;
     	 this.datos = new Object[][] {
     		 {"25.3.236.220",0.0,0.0,0.0,0.0},
     		 {"25.5.249.224",0.0,0.0,0.0,0.0},

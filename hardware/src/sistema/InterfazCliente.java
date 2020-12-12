@@ -7,8 +7,9 @@ import javax.swing.JLabel;
 public class InterfazCliente extends JFrame{
 	public boolean isVisible = true;
     JFrame f;
-     public InterfazCliente(String ip)
+     public InterfazCliente(String ip, boolean isServer)
         {
+    	 this.isVisible = isServer;
          
          f = new JFrame("interfaz 2");
           
