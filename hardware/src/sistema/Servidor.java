@@ -54,12 +54,12 @@ public class Servidor {
     	isServer = true;
     	
     	
-    	
+    	String myIp = "";
     	try {
     		SystemInfo si = new SystemInfo();
     	    HardwareAbstractionLayer hal = si.getHardware();
-    	    String myIp = hal.getNetworkIFs().get(0).getIPv4addr()[0];
-    	    if(!myIp.equals(rankMayor)) {
+    	    myIp = hal.getNetworkIFs().get(0).getIPv4addr()[0];
+    	    if(myIp.equals(rankMayor)) {
     	    	isServer = false;
     	    }
     	} catch(Exception ex) {
@@ -71,7 +71,7 @@ public class Servidor {
     	if(isServer) {
     		tablaRanking = new tabla();    		
     	} else {
-    		interfazCliente = new InterfazCliente(rankMayor);
+    		interfazCliente = new InterfazCliente(myIp);
     	}
     	
     	while(true) {
