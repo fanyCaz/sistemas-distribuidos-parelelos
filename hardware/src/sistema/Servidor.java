@@ -65,7 +65,7 @@ public class Servidor {
     		if(isServer) {
     			try {
     				System.out.println("espera servidor");
-    				Thread.sleep(5000);
+    				Thread.sleep(10000);
     				isServer = funcionServidor();
     			} catch(Exception ex) {
     				System.out.println(ex);
@@ -73,7 +73,7 @@ public class Servidor {
     		} else {
     			try {
     				System.out.println("espera cliente");
-    				Thread.sleep(5000);
+    				Thread.sleep(10000);
     				isServer = funcionCliente();
     			} catch(Exception ex) {
     				System.out.println(ex);
@@ -251,6 +251,8 @@ public class Servidor {
 		    rankMayor = (String) responseArray[2];
 		    
 		    if(isClientServer) {
+		    	tablaRanking.cambiarVisibilidad();
+    			interfazCliente.cambiarVisibilidad();
 		    	oos.close();
 		    	ois.close();
 		    	s.close();
