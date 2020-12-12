@@ -93,6 +93,7 @@ public class Servidor {
             try {
                 // el ServerSocket me da el Socket
                 s = ss.accept();
+                s.setReuseAddress(true);
                 // enmascaro la entrada y salida de bytes
                 ois = new ObjectInputStream(s.getInputStream());
                 oos = new ObjectOutputStream(s.getOutputStream());
@@ -241,6 +242,7 @@ public class Servidor {
 	    	
 		    // instancio el server con la IP y el PORT
 		    s = new Socket(rankMayor,5432);
+		    s.setReuseAddress(true);
 		    oos = new ObjectOutputStream(s.getOutputStream());
 		    ois = new ObjectInputStream(s.getInputStream());
 		
