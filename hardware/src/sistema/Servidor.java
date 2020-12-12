@@ -98,7 +98,6 @@ public class Servidor {
         ObjectOutputStream oos = null;
         Socket s = null;
         ServerSocket ss = new ServerSocket(5432);
-        int counter = 1;
         System.out.println("Servidor conectado");
         int cont = 0;
         while (true) {
@@ -212,7 +211,6 @@ public class Servidor {
 //                }
                
                 
-                System.out.println("Numero: " + counter);
 //                for(String info: newClientSysInfo) {
 //                	System.out.println(info);                	
 //                } 
@@ -221,14 +219,12 @@ public class Servidor {
             } catch (Exception ex) {
                 ex.printStackTrace();
             } finally {
-            	counter += 1;
                 if (oos != null)
                     oos.close();
                 if (ois != null)
                     ois.close();
                 if (s != null)
                     s.close();
-                System.out.println("Conexion cerrada!");
             }
         }
     }
