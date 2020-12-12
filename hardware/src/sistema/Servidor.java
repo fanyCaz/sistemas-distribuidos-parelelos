@@ -183,6 +183,7 @@ public class Servidor {
                     
                     //Cerrar conexion
                     s.close();
+                    ss.close();
                     oos.close();
                     ois.close();
                     return false;
