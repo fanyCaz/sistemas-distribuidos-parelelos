@@ -69,6 +69,8 @@ public class Servidor {
     			try {
     				System.out.println("espera servidor");
     				Thread.sleep(5000);
+    				tablaRanking.cambiarVisibilidad();
+    				interfazCliente.cambiarVisibilidad();
     				isServer = funcionServidor();
     			} catch(Exception ex) {
     				System.out.println(ex);
@@ -77,6 +79,8 @@ public class Servidor {
     			try {
     				System.out.println("espera cliente");
     				Thread.sleep(5000);
+    				tablaRanking.cambiarVisibilidad();
+    				interfazCliente.cambiarVisibilidad();
     				isServer = funcionCliente();
     			} catch(Exception ex) {
     				System.out.println(ex);
