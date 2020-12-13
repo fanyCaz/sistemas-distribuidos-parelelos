@@ -222,8 +222,7 @@ public class Servidor {
 		    interfazCliente.hayError(false,"");
 	        
 	    }
-	    catch(ConnectException cnex)
-	    {
+	    catch(SocketException sote) {
 	    	interfazCliente.hayError(true,"No ha sido posible conectarse con el Servidor");
 	    	System.out.println("conexion no posible");
 	    }
