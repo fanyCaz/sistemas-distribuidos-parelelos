@@ -121,9 +121,13 @@ public class Servidor {
                // Actualizar ranking server 
                 ranking.replace(rankMayor, sumaRankingServer);
                 
+                double almacenamiento = Double.parseDouble(clientSysInfo[9]);
+                almacenamiento = almacenamiento / 1000000000;
                 
                 //Actualizar tabla
                 tablaRanking.update(rankMayor,prcRAM, Double.parseDouble(ServerSysInfo[4]), prcAlmacenamiento, sumaRankingServer);
+                tablaRanking.updateStatic(rankMayor, ""+almacenamiento , ServerSysInfo[11].toString(), ServerSysInfo[5].toString(), ServerSysInfo[0]);
+                tablaRanking.updateDinamic(rankMayor, ""+prcAlmacenamiento, ""+prcRAM, ServerSysInfo[4], ServerSysInfo[12]);
                 
 
                 
@@ -159,7 +163,7 @@ public class Servidor {
                 double sumaRankingCliente = prcAlmacenamiento +  prcRAM + prcLibreCPU;
                 
                 // Actualizar tabla 
-                double almacenamiento = Double.parseDouble(clientSysInfo[9]);
+                almacenamiento = Double.parseDouble(clientSysInfo[9]);
                 almacenamiento = almacenamiento / 1000000000;
                 tablaRanking.update(direccionCliente, prcRAM, Double.parseDouble(clientSysInfo[4]), prcAlmacenamiento, sumaRankingCliente);
                 tablaRanking.updateStatic(direccionCliente, ""+almacenamiento , clientSysInfo[11].toString(), clientSysInfo[5].toString(), clientSysInfo[0]);
