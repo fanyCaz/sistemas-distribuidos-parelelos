@@ -27,6 +27,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.management.ManagementFactory;
 
+import java.net.*;
+
 public class Servidor {
 	// Inicializar hash map
 	static HashMap<String, Double> ranking = new HashMap<String, Double>(); 
@@ -43,7 +45,7 @@ public class Servidor {
     	
     	// Inicializar servidor mayor
     	rankMayor = "25.5.218.12";
-    	isServer = true;
+    	isServer = false;
     	
     	//Iniciarlizar interfaces
     	tablaRanking = new tabla(isServer);    		
@@ -165,9 +167,16 @@ public class Servidor {
                 }
                 // INcrementar contador para la prueba de estres
                 contadorEstres = contadorEstres + 1;
-            } catch (Exception ex) {
+            }
+            catch(BindException bex)
+            {
+            	System.out.println("no se ha cerrado bien la conexion");
+            }
+            catch (Exception ex) 
+            {
                 ex.printStackTrace();
-            } finally {
+            }
+            finally {
                 if (oos != null)
                     oos.close();
                 if (ois != null)
@@ -179,7 +188,8 @@ public class Servidor {
     }
     
 
-    static boolean funcionCliente() throws Exception {
+    @SuppressWarnings("unchecked")
+	static boolean funcionCliente() throws Exception {
     	
     	boolean isClientServer = false;
     	 //Index.index();
@@ -209,7 +219,13 @@ public class Servidor {
 		    	ois.close();
 		    	s.close();
 		    }
+		    interfazCliente.hayError(false,"");
 	        
+	    }
+	    catch(ConnectException cnex)
+	    {
+	    	interfazCliente.hayError(true,"No ha sido posible conectarse con el Servidor");
+	    	System.out.println("conexion no posible");
 	    }
 	    catch(Exception ex)
 	    {
