@@ -30,13 +30,10 @@ import java.lang.management.ManagementFactory;
 public class Servidor {
 	// Inicializar hash map
 	static HashMap<String, Double> ranking = new HashMap<String, Double>(); 
-	static HashMap<String, Object> specs = new HashMap<String, Object>();
 	static String rankMayor;
 	static boolean isServer;
-
 	static tabla tablaRanking;
 	static InterfazCliente interfazCliente;
-	
 	
     public static void main(String[] args) {
     	// Inicializando el hash de ranking para las ips
@@ -44,27 +41,19 @@ public class Servidor {
     	ranking.put("25.5.249.224", 0.0);
     	ranking.put("25.5.218.12", 0.0);
     	
-    	// Inicializando el hash de espcificaciones del sistema para las ips
-    	specs.put("25.3.236.220", new String[] {});
-    	specs.put("25.5.249.224", new String[] {});
-    	specs.put("25.5.218.12", new String[] {});
-    	
     	// Inicializar servidor mayor
     	rankMayor = "25.5.218.12";
     	isServer = true;
     	
-    	
-    	String myIp = "25.5.218.12";
-    	
-    	
-    	
+    	//Iniciarlizar interfaces
     	tablaRanking = new tabla(isServer);    		
-    	interfazCliente = new InterfazCliente(myIp,!isServer);
+    	interfazCliente = new InterfazCliente(!isServer);
     	
+    	//Ciclo principal de switcheo
     	while(true) {
     		if(isServer) {
     			try {
-    				System.out.println("espera servidor");
+    				System.out.println("Espera servidor");
     				Thread.sleep(3000);
     				isServer = funcionServidor();
     			} catch(Exception ex) {
@@ -72,7 +61,7 @@ public class Servidor {
     			}    			
     		} else {
     			try {
-    				System.out.println("espera cliente");
+    				System.out.println("Espera cliente");
     				Thread.sleep(5000);
     				isServer = funcionCliente();
     			} catch(Exception ex) {
@@ -88,11 +77,9 @@ public class Servidor {
         Socket s = null;
         ServerSocket ss = new ServerSocket(5432);
         System.out.println("Servidor conectado");
+        
+        //Checar si contador es mayor a 3 para ejecutar la prueba de estres
         int contadorEstres = 0;
-        
-      //Checar si contador es 5 para ejecutar la prueba de estres
-        
-        
         while (true) {
         	if(contadorEstres > 3) {
             	pruebaEstres();
@@ -109,7 +96,6 @@ public class Servidor {
                 
                 //Informacion Actual de Server
                 String[] ServerSysInfo = funcionObtenerInformacion();
-                specs.replace(rankMayor, ServerSysInfo);
                 
                 // Suma ranking server
                 double prcAlmacenamiento = Double.parseDouble(ServerSysInfo[9]) / Double.parseDouble(ServerSysInfo[10]) * 0.2;
@@ -124,38 +110,15 @@ public class Servidor {
                 double almacenamiento = Double.parseDouble(clientSysInfo[9]);
                 almacenamiento = almacenamiento / 1000000000;
                 
-                //Actualizar tabla
+                //Actualizar tablas
                 tablaRanking.update(rankMayor,prcRAM, Double.parseDouble(ServerSysInfo[4]), prcAlmacenamiento, sumaRankingServer);
                 tablaRanking.updateStatic(rankMayor, ""+almacenamiento , ServerSysInfo[11].toString(), ServerSysInfo[5].toString(), ServerSysInfo[0]);
                 tablaRanking.updateDinamic(rankMayor, ""+prcAlmacenamiento, ""+prcRAM, ServerSysInfo[4], ServerSysInfo[12]);
                 
-
-                
-                //Nuevo arreglo de string con infomración del sistema del cliente + direccion y nombre del host
-                String[] newClientSysInfo = {
-                		"Nombre del host: " + s.getInetAddress().getHostName(),
-                		"Direccion IP: " + s.getInetAddress().getHostAddress(),
-                		"Modelo de CPU: " + clientSysInfo[0], // Modelo CPU
-                		"Frecuencia de CPU: " + clientSysInfo[1], // Frecuencia de CPU
-                		"Velocidad base de CPU: " + clientSysInfo[2], // Velocidad de Base CPU
-                		"Porcentaje de uso de CPU: " + clientSysInfo[3], // Porcentaje de uso de CPU
-                		"Porcentaje libre de CPU: " + clientSysInfo[4], // Porcentaje libre de CPU
-                		"Memoria RAM total: " + clientSysInfo[5], // Memoria RAM Total
-                		"Memoria RAM disponible: " + clientSysInfo[6], // Memoria Ram Disponible
-                		"Memoria RAM en uso: " + clientSysInfo[7], // Memoria ram en uso
-                		"Almacenamiento: " + clientSysInfo[8], // Almacenamiento 
-                		"Almacenamiento total: " + clientSysInfo[9], // Almacenamiento total
-                		"Almacenamiento libre: " + clientSysInfo[10], // Almacenamiento libre 
-                		"Sistemas Operativos: " + clientSysInfo[11], 
-                		"Ancho de banda: " + clientSysInfo[12]// SO
-                		};
-                
-                
-                
-                // Obtener ip
+                // Obtener ip del cliente
                 String direccionCliente = s.getInetAddress().getHostAddress();
                 
-             // Suma ranking Cliente
+                // Suma ranking Cliente
                 prcAlmacenamiento = Double.parseDouble(clientSysInfo[9]) / Double.parseDouble(clientSysInfo[10]) * 0.2;
                 prcRAM = ((Double.parseDouble(clientSysInfo[6])/ 1000000000) * 100) / (Double.parseDouble(clientSysInfo[5]) / 1000000000);
                 prcLibreCPU = Double.parseDouble(clientSysInfo[4]) * 0.8;
@@ -169,26 +132,21 @@ public class Servidor {
                 tablaRanking.updateStatic(direccionCliente, ""+almacenamiento , clientSysInfo[11].toString(), clientSysInfo[5].toString(), clientSysInfo[0]);
                 tablaRanking.updateDinamic(direccionCliente, ""+prcAlmacenamiento, ""+prcRAM, clientSysInfo[4], clientSysInfo[12]);
                 
-                //Actualizar ranking en hash
-                ranking.replace(direccionCliente, sumaRankingCliente);
-//                System.out.println("Ranking de " + direccionCliente + " : " + ranking.get(direccionCliente));
-                
-                for(Object element: ranking.entrySet()) {
-                	System.out.println(element);
-    		    }
+                // Actualizar ranking en hash
+                ranking.replace(direccionCliente, sumaRankingCliente);                
                 
                 // Calcular mayor rank
                 double tempMayor = Double.MIN_VALUE;
                 String ipRankMayor= "";
                 for(Map.Entry<String,Double> element: ranking.entrySet()) {
-//                	System.out.println(element.getValue());
                 	double actualClientRank = element.getValue();
                 	if(actualClientRank > tempMayor) {
                 		ipRankMayor = element.getKey();
                 		tempMayor = actualClientRank;
                 	}
                 }
-                
+
+                // Si hay otro ip con mayor ranking
                 if(!ipRankMayor.equals(rankMayor)) {
                     // Devolver respuesta
                 	rankMayor = ipRankMayor;
@@ -196,7 +154,6 @@ public class Servidor {
                     //Cambiar interfaces
                     tablaRanking.cambiarVisibilidad();
         			interfazCliente.cambiarVisibilidad();
-                    
                     //Cerrar conexion
                     s.close();
                     ss.close();
@@ -206,31 +163,8 @@ public class Servidor {
                 } else {
                 	oos.writeObject(new Object[] {false, ranking, rankMayor});
                 }
-                
-                System.out.println("El mayor es la ip: " + rankMayor);
-                
-                
-                // Actualizar specs del cliente
-                specs.replace(direccionCliente, newClientSysInfo);
-                
                 // INcrementar contador para la prueba de estres
                 contadorEstres = contadorEstres + 1;
-                 
-                
-//                // Obtener specs del cliente
-//                for(Map.Entry<String,Object> element: specs.entrySet()) {
-//                	System.out.println(element.getKey());
-//                	for(String spec: (String[]) element.getValue()) {
-//                		System.out.println(spec);
-//                	}
-//                }
-               
-                
-//                for(String info: newClientSysInfo) {
-//                	System.out.println(info);                	
-//                } 
-                
-                
             } catch (Exception ex) {
                 ex.printStackTrace();
             } finally {
@@ -253,14 +187,9 @@ public class Servidor {
 	    ObjectInputStream ois = null;
 	    Socket s = null;
 
-	    Thread.sleep(2000); //Sleep for a bit longer, 2s should cover almost every possible problem
 	    String systemInfo[] = funcionObtenerInformacion();
 	    try
 	    {
-//	    	for(var infos: systemInfo) {
-//	    		System.out.println(infos);
-//	    	}
-	    	
 		    // instancio el server con la IP y el PORT
 		    s = new Socket(rankMayor,5432);
 		    s.setReuseAddress(true);
@@ -280,11 +209,6 @@ public class Servidor {
 		    	ois.close();
 		    	s.close();
 		    }
-		    
-//		    for(Object element: ranking.entrySet()) {
-//		    	System.out.println(element);
-//		    }
-//	        System.out.println( "Valor de servidor: " + ret);
 	        
 	    }
 	    catch(Exception ex)
@@ -302,6 +226,7 @@ public class Servidor {
     }
     
     static String[] funcionObtenerInformacion() {
+    	// Instanciando objeto para la info del sistema
 	    SystemInfo si = new SystemInfo();
 	    HardwareAbstractionLayer hal = si.getHardware();
 	    
@@ -313,14 +238,12 @@ public class Servidor {
 	    long download2 = net.getBytesRecv();
 	    long timestamp2 = net.getTimeStamp();
 	    double bandwidth = (download2 - download1)/(timestamp2 - timestamp1) * 10;
-//	    System.out.println(bandwidth);
 
-	    //Do the correct calculations
+	    //Informacion procesador
 	    String cpuModel  = hal.getProcessor().getProcessorIdentifier().toString();
 	    Long cpuFreq = hal.getProcessor().getMaxFreq();
 	    
-	    String cpuFreqStr = cpuFreq.toString() + " Hz";
-	    
+	    //Información de disco duro
 	    Long HDD = hal.getDiskStores().get(0).getSize();
 	    String HDDStr = HDD.toString();
 	    String SO = System.getProperty("os.name");
@@ -328,91 +251,33 @@ public class Servidor {
 	    //Uso Procesador
 	    CentralProcessor processor = hal.getProcessor();
 	    CentralProcessor.ProcessorIdentifier processorId = processor.getProcessorIdentifier();
-	    //System.out.println( processorId.getStepping() );
-	    var procesadores = processor.getLogicalProcessors();
-//	    for(var pr : procesadores) {
-//	    	System.out.println("pr : " + pr.getProcessorNumber());
-//	    }
-//	    System.out.println( si.getOperatingSystem().getProcessCount());	//Numero de procesos principales
 	    OperatingSystemMXBean f = ManagementFactory.getPlatformMXBean( OperatingSystemMXBean.class ) ;
-	    
 	    double start = System.nanoTime()/1000000;
 	    double prcUsoCPU = 0.0;
 	    double timeElapsed = 0.0;
 	    while(timeElapsed < 2) {
 	    	double finish = System.nanoTime()/1000000;
 		    timeElapsed = (finish - start) / 1000;
-		    
 		    prcUsoCPU = f.getSystemCpuLoad();
 	    }
-	    
 	    prcUsoCPU = prcUsoCPU * 100;
-	    System.out.println(prcUsoCPU);
-	    String prcCPU = String.valueOf(prcUsoCPU) + "%";
-	    String prcLibreCPU = String.valueOf(100 - prcUsoCPU) + "%";
-	    
-	    //System.out.println( "nucleos : " + si.getHardware().getProcessor().getPhysicalProcessorCount() );
-	    //System.out.println("sockets  : " + si.getHardware().getProcessor().getPhysicalPackageCount() );
-	    //SACA EL NUMERO DE PROCESOS Y EL DE SUBPROCESOS, DIVIDELOS, Y TE DA EL PORCENTAJE DE USO
 	    double cpuVel = processorId.getVendorFreq() / 1000000000.0;
-	    String frecuencyCPU =  String.valueOf(processorId.getVendorFreq() / 1000000000.0);
 	    
 	    //Memoria RAM
 	    GlobalMemory ram_memory = hal.getMemory();
-	    String memory = hal.getMemory().toString();
-	    String totalRam = FormatUtil.formatBytes( ram_memory.getTotal() );
-	    long prc =  (ram_memory.getAvailable()*100) / ram_memory.getTotal();
-	    String prcRamDisponible = String.valueOf(prc) + "%";
 	    long ramUsada = ram_memory.getTotal() - ram_memory.getAvailable();
-	    String usedMemory = FormatUtil.formatBytes( ramUsada );
-	    //Datos como tipo de DDR, manufacturera, etc
-	    //var datosMemoria = hal.getMemory().getPhysicalMemory().toArray();
 	    
-	    //Disco Duro
+	    //Espacio de alamacenamiento
 	    OperatingSystem sistOper = si.getOperatingSystem();
 	    FileSystem sistArchivos = sistOper.getFileSystem();
 	    List<OSFileStore> archivosLista = sistArchivos.getFileStores();
-	    String discoLibre = "", discoTotal = "";
 	    long numDiscoLibre = 0, numDiscoTotal = 0;
 	    for(OSFileStore fs : archivosLista) {
 	    	numDiscoLibre = fs.getFreeSpace();
 	    	numDiscoTotal = fs.getTotalSpace();
-	    	discoLibre = FormatUtil.formatBytes( fs.getFreeSpace() );
-	    	discoTotal = FormatUtil.formatBytes( fs.getTotalSpace() );
 	    }
 	    
-	    InfoCliente info = new InfoCliente();
-	    //CPU
-	    info.setCpuMode(cpuModel);
-	    info.setCpuFrecuencia(cpuFreq);
-	    info.setCpuVelocidad(cpuVel);
-	    info.setCpuPrcUso(prcUsoCPU);
-	    info.setCputPrcLibre( 100 - prcUsoCPU );
-	    //RAM
-	    info.setRamTotal(ram_memory.getTotal());
-	    info.setRamDisponible( ram_memory.getTotal() - ramUsada );
-	    info.setRamUso( ramUsada );
-	    //Almacenamiento
-	    info.setDdString( HDDStr );
-	    info.setDdTotal(numDiscoTotal);
-	    info.setDdLibre(numDiscoLibre);
-	    //SO
-	    info.setSO(SO);
-	    
 	   String[] systemInfo = {
-		            /*cpuModel,			//Modelo CPU
-		            cpuFreqStr,			//Frecuencia CPU
-		            frecuencyCPU,		//Velocidad de Base CPU
-		            prcCPU,				//Porcentaje uso CPU
-		            "porcentaje libre : " + prcLibreCPU,		//Porcentaje libre CPU
-		            totalRam,			//Memoria RAM Total
-		            memory,				//Memoria RAM Disponible
-		            usedMemory,			//Memoria RAM En Uso
-		            prcRamDisponible,	//Porcentaje RAM libre
-		            HDDStr,				//Almacenamiento
-		            discoTotal,			//Almacenamiento Total
-		            discoLibre,			//Almacenamiento Libre
-		            SO,					//Sistema operativo*/
 	    			cpuModel,
 	    			cpuFreq.toString(),
 	    			 String.valueOf(cpuVel),
@@ -430,26 +295,10 @@ public class Servidor {
 	   return systemInfo;
     }
     
-    static double funcionObtenerRanking(String[] SysInfo) {
-    	// Suma de ranking
-        double prcAlmacenamiento = Double.parseDouble(SysInfo[9]) / Double.parseDouble(SysInfo[10]) * 0.2;
-        double prcRAM = ((Double.parseDouble(SysInfo[6])/ 1000000000) * 100) / (Double.parseDouble(SysInfo[5]) / 1000000000);
-        double prcLibreCPU = Double.parseDouble(SysInfo[4]) * 0.8;
-//        double anchBand = Double.parseDouble(SysInfo[12]) * 0.3;
-        
-//        System.out.println("Porcentaje almacenamiento: " + prcAlmacenamiento);
-//        System.out.println("Porcentaje de RAM: " + prcRAM);
-//        System.out.println("Porcentaje CPU: " + prcLibreCPU);
-//        System.out.println("AB: " + anchBand);
-        
-        return (prcAlmacenamiento +  prcRAM + prcLibreCPU);
-    }
-    
     static void pruebaEstres() {
 		try {
 			String fileName = "stress.py";
 			String path= System.getProperty("user.dir") + "\\src\\sistema\\" + fileName;
-			String stressSecs = "30";
 			Process process = Runtime.getRuntime().exec(new String[] {"python",path,"30","6"});
 		} catch(Exception ex) {
 			System.out.println(ex);

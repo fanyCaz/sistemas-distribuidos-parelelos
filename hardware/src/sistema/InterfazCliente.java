@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 public class InterfazCliente extends JFrame{
 	public boolean isVisible = true;
 	public JPanel panel;
-     public InterfazCliente(String ip, boolean isServer)
+     public InterfazCliente(boolean isServer)
         {
     	 
     	 Font miEstilo = new Font("Sans Serif", Font.PLAIN, 15);
